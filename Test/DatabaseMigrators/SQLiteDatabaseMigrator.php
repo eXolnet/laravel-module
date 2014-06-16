@@ -32,8 +32,6 @@ class SQLiteDatabaseMigrator extends DatabaseMigrator
 
 	protected function initialMigration()
 	{
-		$this->restore();
-		return;
 		$this->emptyAndChmod($this->file, '');
 		$this->emptyAndChmod($this->cloneFile, '');
 
