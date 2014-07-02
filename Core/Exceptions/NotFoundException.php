@@ -1,5 +1,5 @@
-<?php namespace Magasin\Core\Exceptions;
+<?php namespace Exolnet\Core\Exceptions;
 
-use Exception;
+use \Exception;
 
 class NotFoundException extends Exception {}
