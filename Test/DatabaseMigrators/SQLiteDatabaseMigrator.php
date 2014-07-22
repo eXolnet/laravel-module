@@ -28,6 +28,9 @@ class SQLiteDatabaseMigrator extends DatabaseMigrator
 		} else {
 			$this->restore();
 		}
+
+		// Enable foreign keys for the current connection/file
+		\DB::statement('PRAGMA foreign_keys = ON;');
 	}
 
 	protected function initialMigration()
@@ -46,7 +49,8 @@ class SQLiteDatabaseMigrator extends DatabaseMigrator
 		$this->filesystem->copy($this->cloneFile, $this->file);
 	}
 
-	protected function emptyAndChmod($file){
+	protected function emptyAndChmod($file)
+	{
 		if ($this->filesystem->put($file, '') !== false) {
 			chmod($file, 0777);
 		}
@@ -58,4 +62,4 @@ class SQLiteDatabaseMigrator extends DatabaseMigrator
 		$filename = pathinfo($file, PATHINFO_BASENAME);
 		return $dirname . '/_' . $filename;
 	}
-} 
+}
