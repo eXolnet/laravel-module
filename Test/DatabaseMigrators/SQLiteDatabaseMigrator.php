@@ -31,6 +31,8 @@ class SQLiteDatabaseMigrator extends DatabaseMigrator
 
 		// Enable foreign keys for the current connection/file
 		\DB::statement('PRAGMA foreign_keys = ON;');
+		// Create sqlite-journal in memory only (instead of creating disk files)
+		\DB::statement('PRAGMA journal_mode = MEMORY;');
 	}
 
 	protected function initialMigration()
