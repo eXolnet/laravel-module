@@ -60,6 +60,20 @@ trait ValidationTrait {
 	}
 
 	/**
+	 * Get messages for the last validation performed.
+	 *
+	 * @return array|null
+	 */
+	public function getValidatorMessages()
+	{
+		if ($this->validator === null) {
+			return null;
+		}
+
+		return $this->validator->messages()->getMessages();
+	}
+
+	/**
 	 * Validate the object with the rules.
 	 *
 	 * @return boolean
@@ -82,9 +96,9 @@ trait ValidationTrait {
 	public function shouldBeValid()
 	{
 		if ( ! $this->validate()) {
-			$errors = $this->getValidationErrors();
+			$message = $this->getValidatorMessages();
 
-			throw new ModelValidationException($errors);
+			throw new ModelValidationException($message);
 		}
 	}
 

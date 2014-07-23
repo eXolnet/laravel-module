@@ -16,7 +16,7 @@ class ValidationException extends Exception
 	protected $errors;
 
 	/**
-	 * Class constructor
+	 * Constructor
 	 *
 	 * @param array      $errors
 	 * @param string     $message
