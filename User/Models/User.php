@@ -18,18 +18,18 @@ class User extends ConfideUser implements UserInterface, RemindableInterface
 	protected $table = 'user';
 
 	// Removed user rules from ConfideUser
-	public static $rules = array(
+	public static $rules = [
 		'email' => 'required|email|unique:user',
 		'password' => 'required|min:4|confirmed',
 		'password_confirmation' => 'min:4',
-	);
+	];
 
 	/**
 	 * The attributes excluded from the model's JSON form.
 	 *
 	 * @var array
 	 */
-	protected $hidden = array('password');
+	protected $hidden = ['password'];
 
 	/**
 	 * Get the unique identifier for the user.

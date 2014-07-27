@@ -5,6 +5,9 @@ use Str;
 
 class TemplateHelper
 {
+	/**
+	 * @return string
+	 */
 	public static function routeToClass()
 	{
 		$routeArray = Str::parseCallback(Route::currentRouteAction(), null);
@@ -14,7 +17,7 @@ class TemplateHelper
 			$controller = str_replace('Controller', '', class_basename(head($routeArray)));
 
 			// Take out the method from the action.
-			$action = str_replace(array('get', 'post', 'patch', 'put', 'delete'), '', last($routeArray));
+			$action = str_replace(['get', 'post', 'patch', 'put', 'delete'], '', last($routeArray));
 
 			return Str::slug($controller . '-' . $action);
 		}

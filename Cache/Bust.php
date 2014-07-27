@@ -15,6 +15,11 @@
  */
 
 class Bust {
+	/**
+	 * @param      $path
+	 * @param null $secure
+	 * @return string
+	 */
 	public function asset($path, $secure = null)
 	{
 		$full_path = public_path().'/'.$path;

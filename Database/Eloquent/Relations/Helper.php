@@ -7,12 +7,16 @@
  */
 
 use Closure;
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\Relation;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Helper
 {
+	/**
+	 * @param HasMany  $relation
+	 * @param array    $items
+	 * @param callable $onSave
+	 */
 	public static function syncHasMany(HasMany $relation, array $items, Closure $onSave = null)
 	{
 		$updated_keys = [];
@@ -50,6 +54,11 @@ class Helper
 		}
 	}
 
+	/**
+	 * @param Relation $relation
+	 * @param array    $item
+	 * @return \Illuminate\Database\Eloquent\Collection|\Illuminate\Database\Eloquent\Model|null|static
+	 */
 	protected static function getRelatedModel(Relation $relation, array $item)
 	{
 		$related  = $relation->getRelated();
@@ -63,6 +72,10 @@ class Helper
 		return $related->find($key);
 	}
 
+	/**
+	 * @param Relation $relation
+	 * @param array    $excluded_ids
+	 */
 	protected static function deleteAllRelatedExcept(Relation $relation, $excluded_ids = [])
 	{
 		$related  = $relation->getRelated();

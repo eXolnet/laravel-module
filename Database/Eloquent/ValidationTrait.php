@@ -91,6 +91,7 @@ trait ValidationTrait {
 	/**
 	 * Validate the model and throw an Exception if it's invalid.
 	 *
+	 * @throws ModelValidationException
 	 * @return void
 	 */
 	public function shouldBeValid()

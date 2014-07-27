@@ -11,6 +11,9 @@ class SQLiteDatabaseMigrator extends DatabaseMigrator
 	protected $file;
 	protected $cloneFile;
 
+	/**
+	 * @param $file
+	 */
 	public function __construct($file)
 	{
 		parent::__construct();
@@ -51,6 +54,9 @@ class SQLiteDatabaseMigrator extends DatabaseMigrator
 		$this->filesystem->copy($this->cloneFile, $this->file);
 	}
 
+	/**
+	 * @param $file
+	 */
 	protected function emptyAndChmod($file)
 	{
 		if ($this->filesystem->put($file, '') !== false) {
@@ -58,6 +64,10 @@ class SQLiteDatabaseMigrator extends DatabaseMigrator
 		}
 	}
 
+	/**
+	 * @param $file
+	 * @return string
+	 */
 	protected function getCloneFilename($file)
 	{
 		$dirname = pathinfo($file, PATHINFO_DIRNAME);

@@ -8,6 +8,10 @@ class EnvironmentDetector
 		'testing.exolnet.com'     => 'testing',
 	];
 
+	/**
+	 * @param $environments
+	 * @return callable
+	 */
 	public static function detect($environments)
 	{
 		// TODO: Do not allow $is_behat = true in production environment
@@ -28,6 +32,9 @@ class EnvironmentDetector
 		return $environments;
 	}
 
+	/**
+	 * @return bool
+	 */
 	public static function is_remote_test()
 	{
 		return array_get($_COOKIE, 'test-env') === 'true';

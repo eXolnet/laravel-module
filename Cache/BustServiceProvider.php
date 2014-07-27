@@ -14,7 +14,6 @@
  * @author       eXolnet <info@exolnet.com>
  */
 
-use Exolnet\Cache\Bust;
 use Illuminate\Support\ServiceProvider;
 
 class BustServiceProvider extends ServiceProvider {
@@ -46,7 +45,7 @@ class BustServiceProvider extends ServiceProvider {
 	 */
 	public function provides()
 	{
-		return array('bust');
+		return ['bust'];
 	}
 
 }

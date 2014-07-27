@@ -6,6 +6,9 @@ use Exolnet\Test\DatabaseMigrators\SQLiteDatabaseMigrator;
 
 class DatabaseMigratorFactory
 {
+	/**
+	 * @return DatabaseMigrator|SQLiteDatabaseMigrator
+	 */
 	public function create()
 	{
 		if ($this->isSQLite() && $this->getSQLiteFile()) {
@@ -15,11 +18,17 @@ class DatabaseMigratorFactory
 		}
 	}
 
+	/**
+	 * @return bool
+	 */
 	protected function isSQLite()
 	{
 		return strcasecmp(array_get($this->getDefaultConnectionConfiguration(), 'driver', ''), 'sqlite') === 0;
 	}
 
+	/**
+	 * @return mixed|null
+	 */
 	protected function getSQLiteFile()
 	{
 		$file = array_get($this->getDefaultConnectionConfiguration(), 'database');
@@ -34,4 +43,4 @@ class DatabaseMigratorFactory
 		$default = Config::get('database.default');
 		return Config::get('database.connections.'.$default, []);
 	}
-} 
+}

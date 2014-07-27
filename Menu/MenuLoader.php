@@ -7,12 +7,22 @@ use URL;
 
 class MenuLoader
 {
+	/**
+	 * @param $name
+	 * @param $menu_file
+	 * @return mixed
+	 */
 	public function fromConfig($name, $menu_file)
 	{
 		$data = Config::get($menu_file);
 		return $this->fromArray($name, $data);
 	}
 
+	/**
+	 * @param       $name
+	 * @param array $menu
+	 * @return mixed
+	 */
 	public function fromArray($name, array $menu)
 	{
 		$parent = Menu::handler($name);
@@ -20,6 +30,10 @@ class MenuLoader
 		return $parent;
 	}
 
+	/**
+	 * @param array $menu
+	 * @param       $parent
+	 */
 	protected function buildMenu(array $menu, $parent)
 	{
 		foreach ($menu as $menu_name => $menu_details) {

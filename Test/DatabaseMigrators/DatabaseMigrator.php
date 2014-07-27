@@ -5,10 +5,13 @@ use Schema;
 
 class DatabaseMigrator
 {
+	/**
+	 *
+	 */
 	public function __construct(){
-		
+
 	}
-	
+
 	public function run()
 	{
 		if (Schema::hasTable('migrations')) {
@@ -17,4 +20,4 @@ class DatabaseMigrator
 		Artisan::call('migrate');
 		Artisan::call('db:seed');
 	}
-} 
+}

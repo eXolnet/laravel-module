@@ -10,6 +10,10 @@ class CodeCoverageCollector
 
 	protected $coverage;
 
+	/**
+	 * @param      $rootDirectory
+	 * @param null $name
+	 */
 	public function __construct($rootDirectory, $name = null)
 	{
 		$this->rootDirectory = $rootDirectory;
