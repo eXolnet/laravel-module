@@ -19,6 +19,13 @@ class Helper
 	 */
 	public static function syncHasMany(HasMany $relation, array $items, Closure $onSave = null)
 	{
+		\DB::transaction(function() use ($relation, $items, $onSave) {
+			self::syncHasManyInternal($relation, $items, $onSave);
+		});
+	}
+
+	protected static function syncHasManyInternal(HasMany $relation, array $items, Closure $onSave = null)
+	{
 		$updated_keys = [];
 		$new_items    = [];
 
