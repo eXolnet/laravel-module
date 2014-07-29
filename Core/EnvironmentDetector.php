@@ -5,7 +5,7 @@ class EnvironmentDetector
 	private static $environments = [
 		'development.exolnet.com' => 'local',
 		'staging.exolnet.com'     => 'staging',
-		'testing.exolnet.com'     => 'testing',
+		'testing.exolnet.com'     => 'staging',
 	];
 
 	/**
