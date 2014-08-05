@@ -28,6 +28,8 @@ class ValidationException extends Exception
 		if (is_array($message)) {
 			$this->errors = $message;
 			$message      = null;
+		} else {
+			$this->errors = [$message];
 		}
 
 		// Construct an exception
