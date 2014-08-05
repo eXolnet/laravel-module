@@ -32,8 +32,7 @@ class ModelValidationException extends ValidationException {
 	 * @param integer    $code
 	 * @param exception  $previous
 	 */
-	public function __construct(array $messages, $message = null, $code = 0,
-		Exception $previous = null)
+	public function __construct(array $messages, $code = 0, Exception $previous = null)
 	{
 		$this->messages = $messages;
 		$errors = [];
@@ -42,7 +41,7 @@ class ModelValidationException extends ValidationException {
 			$errors[] = $item;
 		});
 
-		parent::__construct($errors, $message, $code, $previous);
+		parent::__construct($errors, $code, $previous);
 	}
 
 	public function getMessages()

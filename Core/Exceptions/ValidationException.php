@@ -23,11 +23,12 @@ class ValidationException extends Exception
 	 * @param integer    $code
 	 * @param exception  $previous
 	 */
-	public function __construct(array $errors, $message = null, $code = 0,
-		Exception $previous = null)
+	public function __construct($message = null, $code = 0, Exception $previous = null)
 	{
-		// Array of errors
-		$this->errors = $errors;
+		if (is_array($message)) {
+			$this->errors = $message;
+			$message      = null;
+		}
 
 		// Construct an exception
 		parent::__construct($message, $code, $previous);
