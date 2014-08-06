@@ -27,7 +27,7 @@ class ValidationException extends Exception
 	{
 		if (is_array($message)) {
 			$this->errors = $message;
-			$message      = null;
+			$message      = implode(PHP_EOL, $message);
 		} else {
 			$this->errors = [$message];
 		}
