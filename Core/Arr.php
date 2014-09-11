@@ -8,7 +8,6 @@
 
 namespace Exolnet\Core;
 
-
 class Arr {
 	public static function pluck($array, $value, $key = null)
 	{
@@ -34,5 +33,20 @@ class Arr {
 		}
 
 		return $results;
+	}
+
+	public static function mapNullOnEmpty(array $items)
+	{
+		return array_map(function($item) {
+			if (is_array($item)) {
+				return static::mapNullOnEmpty($item);
+			}
+
+			if (is_string($item) && $item === '') {
+				return null;
+			}
+
+			return $item;
+		}, $items);
 	}
 }
