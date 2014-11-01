@@ -1,7 +1,9 @@
 <?php namespace Exolnet\Menu;
 
 use Config;
+use Illuminate\Support\Str;
 use Lang;
+use Menu\Items\ItemList;
 use Menu\Menu;
 use URL;
 
@@ -27,6 +29,7 @@ class MenuLoader
 	{
 		$parent = Menu::handler($name);
 		$this->buildMenu($menu, $parent);
+
 		return $parent;
 	}
 
@@ -52,13 +55,17 @@ class MenuLoader
 				$icon_content .= '<span class="'.$icon.'"></span> ';
 			}
 
-			if ($uri) {
-				$content .= '<a href="'.URL::to($uri).'">'.$icon_content.$label.'</a>';
-			} else {
-				$content .= $icon_content.$label;
-			}
+			$content .= $icon_content.$label;
 
-			$parent->raw($content, $items);
+			if ($uri) {
+				$item = $parent->add($uri, $content, $items);
+
+				if ($uri !== '#') {
+					$item->activePattern('^'. preg_quote($uri, '/').'(.+)$');
+				}
+			} else {
+				$parent->raw($content, $items);
+			}
 
 			if ($children) {
 				$this->buildMenu($children, $items);
