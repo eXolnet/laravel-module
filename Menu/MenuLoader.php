@@ -61,7 +61,7 @@ class MenuLoader
 				$item = $parent->add($uri, $content, $items);
 
 				if ($uri !== '#') {
-					$item->activePattern('^'. preg_quote($uri, '/').'(.+)$');
+					$item->activePattern('^\/'. preg_quote($uri, '/').'(.+)$');
 				}
 			} else {
 				$parent->raw($content, $items);
