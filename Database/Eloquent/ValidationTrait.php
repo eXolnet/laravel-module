@@ -30,9 +30,20 @@ trait ValidationTrait {
 	 *
 	 * @return array
 	 */
-	public function getRules()
+	public function getRules($attributes = null)
 	{
-		return isset($this->rules) ? $this->rules : [];
+		$rules = isset($this->rules) ? $this->rules : [];
+
+		if ($attributes !== null) {
+			if ( ! is_array($attributes)) {
+				$attributes = array($attributes);
+			}
+
+			// Limit attributes
+			$rules = array_intersect_key($rules, array_flip($attributes));
+		}
+
+		return $rules;
 	}
 
 	/**
@@ -78,11 +89,11 @@ trait ValidationTrait {
 	 *
 	 * @return boolean
 	 */
-	public function validate()
+	public function validate($attributes = null)
 	{
 		$this->validator = Validator::make(
 			$this->getAttributes(),
-			$this->getRules()
+			$this->getRules($attributes)
 		);
 
 		return $this->validator->passes();
@@ -94,9 +105,9 @@ trait ValidationTrait {
 	 * @throws ModelValidationException
 	 * @return void
 	 */
-	public function shouldBeValid()
+	public function shouldBeValid($attributes = null)
 	{
-		if ( ! $this->validate()) {
+		if ( ! $this->validate($attributes)) {
 			$message = $this->getValidatorMessages();
 
 			throw new ModelValidationException($message);
