@@ -33,6 +33,16 @@ class EnvironmentDetector
 	}
 
 	/**
+	 * Add environements to host detector.
+	 *
+	 * @param array $environments
+	 */
+	public static function addEnvironments(array $environments)
+	{
+		static::$environments = $environments + static::$environments;
+	}
+
+	/**
 	 * @return bool
 	 */
 	public static function is_remote_test()
