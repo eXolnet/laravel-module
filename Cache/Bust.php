@@ -35,7 +35,7 @@ class Bust {
 		}
 
 		$basename = pathinfo($path, PATHINFO_BASENAME);
-		$pos      = strpos($basename, '.');
+		$pos      = strrpos($basename, '.');
 
 		if ($pos === false) {
 			return asset($path, $secure);
