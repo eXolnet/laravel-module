@@ -24,11 +24,10 @@ class HtmlHelper {
 	 * @param $value
 	 * @return mixed
 	 */
-	public static function obfuscateMailtos($html)
+	public static function obfuscateEmails($html)
 	{
-		return preg_replace_callback('#("|\')(mailto:.+?)(\1)#', function($match) {
-			//dd($match);
-			return $match[1]. \HTML::obfuscate($match[2]).$match[3];
+		return preg_replace_callback('#(mailto:)?[a-z0-9_.+-]+@[a-z0-9-]+\.[a-z0-9-.]+#i', function($match) {
+			return \HTML::email($match[0]);
 		}, $html);
 	}
 }
