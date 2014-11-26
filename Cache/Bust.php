@@ -1,6 +1,7 @@
 <?php namespace Exolnet\Cache;
 /**
  * Copyright © 2014 eXolnet Inc. All rights reserved. (http://www.exolnet.com)
+ *
  * This file contains copyrighted code that is the sole property of eXolnet Inc.
  * You may not use this file except with a written agreement.
  *

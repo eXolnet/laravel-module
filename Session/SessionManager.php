@@ -1,6 +1,7 @@
 <?php namespace Exolnet\Session;
 /**
  * Copyright © 2014 eXolnet Inc. All rights reserved. (http://www.exolnet.com)
+ *
  * This file contains copyrighted code that is the sole property of eXolnet Inc.
  * You may not use this file except with a written agreement.
  *
@@ -9,9 +10,9 @@
  * WARRANTIES, INCLUDING WITHOUT LIMITATION, ANY WARRANTIES OF MERCHANTABILITY,
  * FITNESS FOR A PARTICULAR PURPOSE, QUIET ENJOYMENT OR NON-INFRINGEMENT.
  *
- * @author     eXolnet <info@exolnet.com>
  * @package    Exolnet
  * @subpackage Session
+ * @author     eXolnet Inc. <info@exolnet.com>
  */
 
 class SessionManager extends \Illuminate\Session\SessionManager {

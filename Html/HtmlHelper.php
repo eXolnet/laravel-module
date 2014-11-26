@@ -10,8 +10,8 @@
  * WARRANTIES, INCLUDING WITHOUT LIMITATION, ANY WARRANTIES OF MERCHANTABILITY,
  * FITNESS FOR A PARTICULAR PURPOSE, QUIET ENJOYMENT OR NON-INFRINGEMENT.
  *
- * @package    Magasin
- * @subpackage Attribute
+ * @package    Exolnet
+ * @subpackage Html
  * @author     eXolnet Inc. <info@exolnet.com>
  */
 

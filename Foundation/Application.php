@@ -1,6 +1,7 @@
 <?php namespace Exolnet\Foundation;
 /**
  * Copyright © 2014 eXolnet Inc. All rights reserved. (http://www.exolnet.com)
+ *
  * This file contains copyrighted code that is the sole property of eXolnet Inc.
  * You may not use this file except with a written agreement.
  *
@@ -9,9 +10,9 @@
  * WARRANTIES, INCLUDING WITHOUT LIMITATION, ANY WARRANTIES OF MERCHANTABILITY,
  * FITNESS FOR A PARTICULAR PURPOSE, QUIET ENJOYMENT OR NON-INFRINGEMENT.
  *
- * @package      Exolnet
- * @subpackage   Foundation
- * @author       eXolnet <info@exolnet.com>
+ * @package    Exolnet
+ * @subpackage Foundation
+ * @author     eXolnet Inc. <info@exolnet.com>
  */
 
 use \Illuminate\Foundation\Application as LaravelApplication;
