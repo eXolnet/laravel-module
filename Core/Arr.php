@@ -58,4 +58,38 @@ class Arr {
 			return $item;
 		}, $items);
 	}
+
+	public static function forget(&$array, $keys)
+	{
+		$original =& $array;
+
+		foreach ((array) $keys as $key)
+		{
+			$parts = explode('.', $key);
+
+			$shouldUnset = true;
+			while (count($parts) > 1)
+			{
+				$part = array_shift($parts);
+
+				if (isset($array[$part]) && is_array($array[$part])) {
+					$array =& $array[$part];
+				} else if ($part === '*') {
+					$subKey =  implode('.', $parts);
+					foreach ($array as &$item) {
+						static::forget($item, $subKey);
+					}
+					$shouldUnset = false;
+					break;
+				}
+			}
+
+			if ($shouldUnset) {
+				unset($array[array_shift($parts)]);
+			}
+
+			// reset to initial array
+			$array =& $original;
+		}
+	}
 }
