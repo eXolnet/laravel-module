@@ -74,16 +74,19 @@ class Arr {
 
 				if (isset($array[$part]) && is_array($array[$part])) {
 					$array =& $array[$part];
-				} else if ($part === '*') {
+				} elseif ($part === '*') {
 					$subKey =  implode('.', $parts);
-					foreach ($array as &$item) {
-						static::forget($item, $subKey);
+					foreach ($array as $key => &$value) {
+						if (is_array($value)) {
+							static::forget($value, $subKey);
+						}
 					}
 					$shouldUnset = false;
 					break;
 				}
 			}
 
+			// TODO-TR: Add support for x.*
 			if ($shouldUnset) {
 				unset($array[array_shift($parts)]);
 			}
