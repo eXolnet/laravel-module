@@ -16,6 +16,7 @@
  */
 
 use Closure;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\Relation;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
@@ -103,5 +104,10 @@ class Helper
 		}
 
 		$query->delete();
+	}
+
+	public static function setBelongsTo(BelongsTo $belongsTo, $object = null)
+	{
+		return $object ? $belongsTo->associate($object) : $belongsTo->dissociate();
 	}
 }
