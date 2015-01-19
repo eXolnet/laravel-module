@@ -93,7 +93,7 @@ class Helper
 	 * @param Relation $relation
 	 * @param array    $excluded_ids
 	 */
-	protected static function deleteAllRelatedExcept(Relation $relation, $excluded_ids = [])
+	public static function deleteAllRelatedExcept(Relation $relation, $excluded_ids = [])
 	{
 		$related  = $relation->getRelated();
 		$key_name = $related->getKeyName();
