@@ -1,4 +1,5 @@
 <?php namespace Exolnet\Menu;
+
 /**
  * Copyright © 2014 eXolnet Inc. All rights reserved. (http://www.exolnet.com)
  *
@@ -16,14 +17,15 @@
  */
 
 use Config;
-use Illuminate\Support\Str;
 use Lang;
-use Menu\Items\ItemList;
 use Menu\Menu;
-use URL;
 
-class MenuLoader
-{
+class MenuLoader {
+	/**
+	 * @var array
+	 */
+	protected $callbacks = [];
+
 	/**
 	 * @param $name
 	 * @param $menu_file
@@ -61,22 +63,35 @@ class MenuLoader
 			$icon = array_get($menu_details, 'icon', null);
 			$children = array_get($menu_details, 'children', false);
 
+			$skipItem = false;
+			foreach ($this->callbacks as $callback) {
+				$result = $callback($menu_details);
+				if ( ! $result) {
+					$skipItem = true;
+					break;
+				}
+			}
+
+			if ($skipItem) {
+				continue;
+			}
+
 			// Create children container
 			$items = Menu::items($menu_name);
 
 			$content = '';
 			$icon_content = '';
 			if ($icon) {
-				$icon_content .= '<span class="'.$icon.'"></span> ';
+				$icon_content .= '<span class="' . $icon . '"></span> ';
 			}
 
-			$content .= $icon_content.$label;
+			$content .= $icon_content . $label;
 
 			if ($uri) {
 				$item = $parent->add($uri, $content, $items);
 
 				if ($uri !== '#') {
-					$item->activePattern('^\/'. preg_quote($uri, '/').'(.+)$');
+					$item->activePattern('^\/' . preg_quote($uri, '/') . '(.+)$');
 				}
 			} else {
 				$parent->raw($content, $items);
@@ -86,5 +101,13 @@ class MenuLoader
 				$this->buildMenu($children, $items);
 			}
 		}
+	}
+
+	/**
+	 * @param callable $callback
+	 */
+	public function setMenuItemCallback(callable $callback)
+	{
+		$this->callbacks[] = $callback;
 	}
 }
