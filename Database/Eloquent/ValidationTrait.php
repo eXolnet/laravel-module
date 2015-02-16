@@ -119,21 +119,21 @@ trait ValidationTrait {
 	/**
 	 * @inheritDoc
 	 */
-	protected function performUpdate(Builder $query)
+	protected function performUpdate(Builder $query, array $options = [])
 	{
 		$this->shouldBeValid();
 
-		return parent::performUpdate($query);
+		return parent::performUpdate($query, $options);
 	}
 
 	/**
 	 * @inheritDoc
 	 */
-	protected function performInsert(Builder $query)
+	protected function performInsert(Builder $query, array $options = [])
 	{
 		$this->shouldBeValid();
 
-		return parent::performInsert($query);
+		return parent::performInsert($query, $options);
 	}
 
 	/**
