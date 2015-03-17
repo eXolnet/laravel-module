@@ -2,7 +2,7 @@
 
 class RoutingServiceProvider extends \Illuminate\Routing\RoutingServiceProvider
 {
-	public function registerRouter()
+	protected function registerRouter()
 	{
 		$this->app['router'] = $this->app->share(function($app)
 		{
@@ -19,7 +19,7 @@ class RoutingServiceProvider extends \Illuminate\Routing\RoutingServiceProvider
 		});
 	}
 
-	public function registerUrlGenerator()
+	protected function registerUrlGenerator()
 	{
 		$this->app['url'] = $this->app->share(function($app)
 		{
