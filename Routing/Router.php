@@ -183,4 +183,12 @@ class Router extends LaravelRouter {
 
 		return $alternates;
 	}
+
+	protected function getResourceAction($resource, $controller, $method, $options)
+	{
+		$name = $this->getResourceName($resource, $method, $options);
+		$options = array_except($options, ['as', 'uses']);
+
+		return ['as' => $name, 'uses' => $controller.'@'.$method] + $options;
+	}
 }
