@@ -4,7 +4,8 @@ use Illuminate\Cache\ArrayStore;
 use Illuminate\Cache\Repository;
 use Illuminate\Support\ServiceProvider;
 
-class SingleRequestCacheProvider extends ServiceProvider {
+class SingleRequestCacheProvider extends ServiceProvider
+{
 
 	/**
 	 * Indicates if loading of the provider is deferred.
@@ -20,8 +21,7 @@ class SingleRequestCacheProvider extends ServiceProvider {
 	 */
 	public function register()
 	{
-		$this->app->bindShared('singleRequestCache', function($app)
-		{
+		$this->app->bindShared('singleRequestCache', function ($app) {
 			return new Repository(new ArrayStore());
 		});
 	}
@@ -35,5 +35,4 @@ class SingleRequestCacheProvider extends ServiceProvider {
 	{
 		return ['singleRequestCache'];
 	}
-
 }

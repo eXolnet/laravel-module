@@ -2,7 +2,8 @@
 
 use Illuminate\Support\ServiceProvider;
 
-class BustServiceProvider extends ServiceProvider {
+class BustServiceProvider extends ServiceProvider
+{
 
 	/**
 	 * Indicates if loading of the provider is deferred.
@@ -18,8 +19,7 @@ class BustServiceProvider extends ServiceProvider {
 	 */
 	public function register()
 	{
-		$this->app->bindShared('bust', function($app)
-		{
+		$this->app->bindShared('bust', function ($app) {
 			return new Bust();
 		});
 	}
@@ -33,5 +33,4 @@ class BustServiceProvider extends ServiceProvider {
 	{
 		return ['bust'];
 	}
-
 }

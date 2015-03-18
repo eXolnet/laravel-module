@@ -25,7 +25,7 @@ class SQLiteDatabaseMigrator extends DatabaseMigrator
 
 	public function run()
 	{
-		if (!$this->booted) {
+		if ( ! $this->booted) {
 			$this->initialMigration();
 			$this->booted = true;
 		} else {
@@ -83,7 +83,6 @@ class SQLiteDatabaseMigrator extends DatabaseMigrator
 		return $dirname . '/_' . $filename;
 	}
 
-
 	protected function canReuseClone($signature)
 	{
 		return $this->bomFileExists() && $this->sqliteSignatureMatches() && $this->signatureMatches($signature);
@@ -104,7 +103,7 @@ class SQLiteDatabaseMigrator extends DatabaseMigrator
 
 	protected function sqliteSignatureMatches()
 	{
-		if (!$this->filesystem->exists($this->cloneFile)) {
+		if ( ! $this->filesystem->exists($this->cloneFile)) {
 			return false;
 		}
 
@@ -142,7 +141,7 @@ class SQLiteDatabaseMigrator extends DatabaseMigrator
 	protected function generateBOM($signature)
 	{
 		$data = [
-			'files' => $signature,
+			'files'  => $signature,
 			'sqlite' => sha1($this->filesystem->get($this->cloneFile)),
 		];
 		$this->filesystem->put($this->getBOMFilename($this->file), json_encode($data));

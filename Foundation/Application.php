@@ -1,8 +1,9 @@
 <?php namespace Exolnet\Foundation;
 
-use \Illuminate\Foundation\Application as LaravelApplication;
+use Illuminate\Foundation\Application as LaravelApplication;
 
-class Application extends LaravelApplication {
+class Application extends LaravelApplication
+{
 	/**
 	 * Remove all data contained within the application.
 	 */
@@ -31,7 +32,7 @@ class Application extends LaravelApplication {
 	/**
 	 * Set the current application locale.
 	 *
-	 * @param  string  $locale
+	 * @param  string $locale
 	 * @return void
 	 */
 	public function setLocale($locale)
@@ -40,7 +41,7 @@ class Application extends LaravelApplication {
 
 		$localeMapping = $this['config']->get('locale-mapping');
 
-		$mappedValue = array_get($localeMapping, 'locales.'.$locale);
+		$mappedValue = array_get($localeMapping, 'locales.' . $locale);
 		if ($mappedValue) {
 			$mappedCategories = array_get($localeMapping, 'categories');
 			if (in_array(LC_ALL, $mappedCategories)) {

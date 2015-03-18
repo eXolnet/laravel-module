@@ -3,7 +3,8 @@
 use App;
 use Config;
 
-class LaravelProcessor {
+class LaravelProcessor
+{
 	public function __invoke(array $record)
 	{
 		$record['extra']['app'] = Config::get('log.app');

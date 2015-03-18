@@ -18,16 +18,16 @@ class ValidationException extends Exception
 	/**
 	 * Constructor
 	 *
-	 * @param array      $errors
-	 * @param string     $message
-	 * @param integer    $code
-	 * @param exception  $previous
+	 * @param array     $errors
+	 * @param string    $message
+	 * @param integer   $code
+	 * @param exception $previous
 	 */
 	public function __construct($message = null, $code = 0, Exception $previous = null)
 	{
 		if (is_array($message)) {
 			$this->errors = $message;
-			$message      = implode(PHP_EOL, $message);
+			$message = implode(PHP_EOL, $message);
 		} else {
 			$this->errors = [$message];
 		}
@@ -49,7 +49,7 @@ class ValidationException extends Exception
 	/**
 	 * Convert the model instance to JSON.
 	 *
-	 * @param  int  $options
+	 * @param  int $options
 	 * @return string
 	 */
 	public function toJson($options = 0)

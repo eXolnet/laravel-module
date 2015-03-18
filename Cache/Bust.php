@@ -1,6 +1,7 @@
 <?php namespace Exolnet\Cache;
 
-class Bust {
+class Bust
+{
 	/**
 	 * @param      $path
 	 * @param null $secure
@@ -8,7 +9,7 @@ class Bust {
 	 */
 	public function asset($path, $secure = null)
 	{
-		$full_path = public_path().'/'.$path;
+		$full_path = public_path() . '/' . $path;
 
 		if ( ! file_exists($full_path)) {
 			return asset($path, $secure);
@@ -21,14 +22,14 @@ class Bust {
 		}
 
 		$basename = pathinfo($path, PATHINFO_BASENAME);
-		$pos      = strrpos($basename, '.');
+		$pos = strrpos($basename, '.');
 
 		if ($pos === false) {
 			return asset($path, $secure);
 		}
 
 		$basename_bust = substr($basename, 0, $pos) . '.' . $time . substr($basename, $pos);
-		$uri           = substr($path, 0, -strlen($basename)) . $basename_bust;
+		$uri = substr($path, 0, -strlen($basename)) . $basename_bust;
 
 		return asset($uri, $secure);
 	}

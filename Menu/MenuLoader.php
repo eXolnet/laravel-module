@@ -4,7 +4,8 @@ use Config;
 use Lang;
 use Menu\Menu;
 
-class MenuLoader {
+class MenuLoader
+{
 	/**
 	 * @var array
 	 */

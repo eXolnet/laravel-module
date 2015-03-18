@@ -1,6 +1,7 @@
 <?php namespace Exolnet\Validation;
 
-class RuleBuilder {
+class RuleBuilder
+{
 	public function forLanguage(array $rules, $languages)
 	{
 		return $this->mapKeyedLanguage($rules, (array)$languages);

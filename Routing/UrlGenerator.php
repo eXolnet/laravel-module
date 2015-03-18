@@ -4,8 +4,9 @@ use App;
 use Config;
 use Illuminate\Routing\UrlGenerator as LaravelUrlGenerator;
 
-class UrlGenerator extends LaravelUrlGenerator {
-	public function route($name, $parameters = array(), $absolute = true, $route = null, $locale = null)
+class UrlGenerator extends LaravelUrlGenerator
+{
+	public function route($name, $parameters = [], $absolute = true, $route = null, $locale = null)
 	{
 		$name = $this->getBestRouteName($name, $locale);
 
@@ -39,7 +40,7 @@ class UrlGenerator extends LaravelUrlGenerator {
 			return $name;
 		}
 
-		$localeName = $name.'.'.$locale;
+		$localeName = $name . '.' . $locale;
 
 		if ($this->routes->getByName($localeName) !== null) {
 			return $localeName;
@@ -52,7 +53,7 @@ class UrlGenerator extends LaravelUrlGenerator {
 	{
 		$root = $this->getCdnUrl($secure);
 
-		return $this->removeIndex($root).'/'.trim($path, '/');
+		return $this->removeIndex($root) . '/' . trim($path, '/');
 	}
 
 	public function getCdnUrl($secure = null)

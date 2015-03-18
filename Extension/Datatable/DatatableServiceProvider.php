@@ -23,8 +23,7 @@ class DatatableServiceProvider extends ServiceProvider
 	 */
 	public function register()
 	{
-		$this->app['datatable'] = $this->app->share(function($app)
-		{
+		$this->app['datatable'] = $this->app->share(function ($app) {
 			return new Datatable;
 		});
 	}
@@ -41,6 +40,6 @@ class DatatableServiceProvider extends ServiceProvider
 
 	public function guessPackagePath()
 	{
-		return $this->app['path.base'].'/vendor/chumper/datatable/src';
+		return $this->app['path.base'] . '/vendor/chumper/datatable/src';
 	}
 }

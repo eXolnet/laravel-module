@@ -1,8 +1,9 @@
 <?php namespace Exolnet\Cache;
 
-use \Illuminate\Support\Facades\Facade;
+use Illuminate\Support\Facades\Facade;
 
-class BustFacade extends Facade {
+class BustFacade extends Facade
+{
 	/**
 	 * Get the registered name of the component.
 	 *

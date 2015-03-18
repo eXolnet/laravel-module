@@ -38,8 +38,8 @@ class CodeCoverageCollector
 		$this->coverage->stop();
 
 		$directory = $this->rootDirectory . '/app/storage/logs/code-coverage/';
-		$filename = $directory.microtime(true).'.cov';
-		if (!file_exists($directory)) {
+		$filename = $directory . microtime(true) . '.cov';
+		if ( ! file_exists($directory)) {
 			mkdir($directory, 0777, true);
 		}
 

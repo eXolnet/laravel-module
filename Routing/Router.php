@@ -3,14 +3,15 @@
 use App;
 use Closure;
 use Illuminate\Http\Request;
-use Illuminate\Routing\Router as LaravelRouter;
 use Illuminate\Routing\Route as LaravelRoute;
+use Illuminate\Routing\Router as LaravelRouter;
 
-class Router extends LaravelRouter {
+class Router extends LaravelRouter
+{
 	/**
 	 * @var array
 	 */
-	protected $localeStack = array();
+	protected $localeStack = [];
 
 	/**
 	 * @var array
@@ -74,7 +75,7 @@ class Router extends LaravelRouter {
 			return $prefix;
 		}
 
-		return str_replace($locale.'.', '', $prefix);
+		return str_replace($locale . '.', '', $prefix);
 	}
 
 	//==========================================================================
@@ -86,12 +87,12 @@ class Router extends LaravelRouter {
 	{
 		// Set locale
 		$initialLocale = App::getLocale();
-		$locale        = $this->extractLocale($request);
+		$locale = $this->extractLocale($request);
 
 		App::setLocale($locale);
-		setlocale(LC_COLLATE, $locale.'_CA.utf8');
-		setlocale(LC_CTYPE, $locale.'_CA.utf8');
-		setlocale(LC_TIME, $locale.'_CA.utf8');
+		setlocale(LC_COLLATE, $locale . '_CA.utf8');
+		setlocale(LC_CTYPE, $locale . '_CA.utf8');
+		setlocale(LC_TIME, $locale . '_CA.utf8');
 
 		$this->storeLocale($locale);
 
@@ -129,7 +130,7 @@ class Router extends LaravelRouter {
 	public function setBaseLocale($locale)
 	{
 		if ( ! $this->isSupportedLocale($locale)) {
-			throw new \InvalidArgumentException('The locale '.$locale.' is not supported');
+			throw new \InvalidArgumentException('The locale ' . $locale . ' is not supported');
 		}
 
 		$this->baseLocale = $locale;

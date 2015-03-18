@@ -1,8 +1,7 @@
 <?php namespace Exolnet\User\Models;
 
-use Illuminate\Auth\UserInterface;
 use Illuminate\Auth\Reminders\RemindableInterface;
-
+use Illuminate\Auth\UserInterface;
 use Zizaco\Confide\ConfideUser;
 use Zizaco\Entrust\HasRole;
 
@@ -19,8 +18,8 @@ class User extends ConfideUser implements UserInterface, RemindableInterface
 
 	// Removed user rules from ConfideUser
 	public static $rules = [
-		'email' => 'required|email|unique:user',
-		'password' => 'required|min:4|confirmed',
+		'email'                 => 'required|email|unique:user',
+		'password'              => 'required|min:4|confirmed',
 		'password_confirmation' => 'min:4',
 	];
 
@@ -64,7 +63,7 @@ class User extends ConfideUser implements UserInterface, RemindableInterface
 	/**
 	 * Set the token value for the "remember me" session.
 	 *
-	 * @param  string  $value
+	 * @param  string $value
 	 * @return void
 	 */
 	public function setRememberToken($value)

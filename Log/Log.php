@@ -11,7 +11,8 @@ use Monolog\Processor\MemoryPeakUsageProcessor;
 use Monolog\Processor\MemoryUsageProcessor;
 use Monolog\Processor\WebProcessor;
 
-class Log {
+class Log
+{
 	public static function prepareForError()
 	{
 		$monolog = LaravelLog::getMonolog();

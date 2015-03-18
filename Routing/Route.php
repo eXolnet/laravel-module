@@ -3,7 +3,8 @@
 use Illuminate\Routing\Route as LaravelRoute;
 use Lang;
 
-class Route extends LaravelRoute {
+class Route extends LaravelRoute
+{
 	/**
 	 * @var string
 	 */
@@ -23,9 +24,9 @@ class Route extends LaravelRoute {
 	 */
 	public function __construct($methods, $uri, $action, $locale)
 	{
-		$this->locale  = $locale;
-		$this->baseUri = preg_replace('/\b'. $locale .'\b/', '%LOCALE%', $uri);
-		$uri           = static::translateUri($uri, $locale);
+		$this->locale = $locale;
+		$this->baseUri = preg_replace('/\b' . $locale . '\b/', '%LOCALE%', $uri);
+		$uri = static::translateUri($uri, $locale);
 
 		if (array_key_exists('as', $action)) {
 			$action['as'] .= '.' . $locale;
@@ -69,7 +70,7 @@ class Route extends LaravelRoute {
 		$parts = explode('/', $uri);
 
 		foreach ($parts as $index => $part) {
-			$localeKey = 'routes.'.$part;
+			$localeKey = 'routes.' . $part;
 
 			if (Lang::has($localeKey, $locale)) {
 				$parts[$index] = Lang::get($localeKey, [], $locale);

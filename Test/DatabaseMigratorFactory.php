@@ -41,6 +41,6 @@ class DatabaseMigratorFactory
 	protected function getDefaultConnectionConfiguration()
 	{
 		$default = Config::get('database.default');
-		return Config::get('database.connections.'.$default, []);
+		return Config::get('database.connections.' . $default, []);
 	}
 }

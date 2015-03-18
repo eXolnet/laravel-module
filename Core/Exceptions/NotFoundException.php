@@ -1,5 +1,7 @@
 <?php namespace Exolnet\Core\Exceptions;
 
-use \Exception;
+use Exception;
 
-class NotFoundException extends Exception {}
+class NotFoundException extends Exception
+{
+}

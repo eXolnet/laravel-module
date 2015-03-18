@@ -2,8 +2,11 @@
 
 use Illuminate\Support\Facades\Facade;
 
-class SingleRequestCacheFacade extends Facade {
+class SingleRequestCacheFacade extends Facade
+{
 
-	protected static function getFacadeAccessor() { return 'singleRequestCache'; }
-
+	protected static function getFacadeAccessor()
+	{
+		return 'singleRequestCache';
+	}
 }

@@ -17,15 +17,18 @@ class EnvironmentDetector
 		// TODO: Do not allow $is_behat = true in production environment
 		$is_behat = self::is_remote_test();
 		if ($is_behat) {
-			return function() { return 'test'; };
+			return function () {
+				return 'test';
+			};
 		}
 
-		if (isset($_SERVER['HTTP_HOST']))
-		{
+		if (isset($_SERVER['HTTP_HOST'])) {
 			$host = $_SERVER['HTTP_HOST'];
 
 			if (array_key_exists($host, self::$environments)) {
-				return function() use ($host) { return self::$environments[$host]; };
+				return function () use ($host) {
+					return self::$environments[$host];
+				};
 			}
 		}
 

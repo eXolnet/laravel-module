@@ -2,8 +2,8 @@
 
 use Closure;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
-use Illuminate\Database\Eloquent\Relations\Relation;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\Relation;
 
 class Helper
 {
@@ -14,7 +14,7 @@ class Helper
 	 */
 	public static function syncHasMany(HasMany $relation, array $items, Closure $onSave = null)
 	{
-		\DB::transaction(function() use ($relation, $items, $onSave) {
+		\DB::transaction(function () use ($relation, $items, $onSave) {
 			self::syncHasManyInternal($relation, $items, $onSave);
 		});
 	}
@@ -22,7 +22,7 @@ class Helper
 	protected static function syncHasManyInternal(HasMany $relation, array $items, Closure $onSave = null)
 	{
 		$updated_keys = [];
-		$new_items    = [];
+		$new_items = [];
 
 		// 1. Update existing relations and prepare the delete and create steps
 		foreach ($items as $item) {
@@ -63,9 +63,9 @@ class Helper
 	 */
 	protected static function getRelatedModel(Relation $relation, array $item)
 	{
-		$related  = $relation->getRelated();
+		$related = $relation->getRelated();
 		$key_name = $related->getKeyName();
-		$key      = array_get($item, $key_name, null);
+		$key = array_get($item, $key_name, null);
 
 		if ($key === null) {
 			return null;
@@ -80,9 +80,9 @@ class Helper
 	 */
 	public static function deleteAllRelatedExcept(Relation $relation, $excluded_ids = [])
 	{
-		$related  = $relation->getRelated();
+		$related = $relation->getRelated();
 		$key_name = $related->getKeyName();
-		$query    = $relation->getQuery();
+		$query = $relation->getQuery();
 
 		if (count($excluded_ids) > 0) {
 			$query->whereNotIn($key_name, $excluded_ids);

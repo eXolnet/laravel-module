@@ -1,5 +1,7 @@
 <?php namespace Exolnet\Core\Exceptions;
 
-use \Exception;
+use Exception;
 
-class DatabaseException extends Exception {}
+class DatabaseException extends Exception
+{
+}

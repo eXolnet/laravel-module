@@ -1,6 +1,7 @@
 <?php namespace Exolnet\Session;
 
-class SessionServiceProvider extends \Illuminate\Session\SessionServiceProvider {
+class SessionServiceProvider extends \Illuminate\Session\SessionServiceProvider
+{
 	/**
 	 * Register the service provider.
 	 *
@@ -22,8 +23,7 @@ class SessionServiceProvider extends \Illuminate\Session\SessionServiceProvider 
 	 */
 	protected function registerSessionManager()
 	{
-		$this->app['session.manager'] = $this->app->share(function($app)
-		{
+		$this->app['session.manager'] = $this->app->share(function ($app) {
 			return new SessionManager($app);
 		});
 	}

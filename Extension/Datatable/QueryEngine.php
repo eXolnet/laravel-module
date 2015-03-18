@@ -19,7 +19,7 @@ class QueryEngine extends \Chumper\Datatable\Engines\BaseEngine
 	/**
 	 * @var array single column searches
 	 */
-	public $columnSearches = array();
+	public $columnSearches = [];
 
 	/**
 	 * @var Collection the returning collection
@@ -34,23 +34,20 @@ class QueryEngine extends \Chumper\Datatable\Engines\BaseEngine
 	/**
 	 * @var array Different options
 	 */
-	private $options = array(
-		'searchOperator'    =>  'LIKE',
-		'searchWithAlias'   =>  false,
-		'orderOrder'        =>  null,
-		'counter'           =>  0,
-	);
+	private $options = [
+		'searchOperator'  => 'LIKE',
+		'searchWithAlias' => false,
+		'orderOrder'      => null,
+		'counter'         => 0,
+	];
 
 	function __construct($builder)
 	{
 		parent::__construct();
-		if($builder instanceof Relation)
-		{
+		if ($builder instanceof Relation) {
 			$this->builder = $builder->getBaseQuery();
 			$this->originalBuilder = clone $builder->getBaseQuery();
-		}
-		else
-		{
+		} else {
 			$this->builder = $builder;
 			$this->originalBuilder = clone $builder;
 		}
@@ -77,7 +74,6 @@ class QueryEngine extends \Chumper\Datatable\Engines\BaseEngine
 		return $this;
 	}
 
-
 	public function setSearchOperator($value = "LIKE")
 	{
 		$this->options['searchOperator'] = $value;
@@ -92,7 +88,7 @@ class QueryEngine extends \Chumper\Datatable\Engines\BaseEngine
 
 	//--------PRIVATE FUNCTIONS
 
-	protected function internalMake(Collection $columns, array $searchColumns = array())
+	protected function internalMake(Collection $columns, array $searchColumns = [])
 	{
 		$builder = clone $this->builder;
 		$countBuilder = clone $this->builder;
@@ -100,12 +96,9 @@ class QueryEngine extends \Chumper\Datatable\Engines\BaseEngine
 		$builder = $this->doInternalSearch($builder, $searchColumns);
 		$countBuilder = $this->doInternalSearch($countBuilder, $searchColumns);
 
-		if($this->options['searchWithAlias'])
-		{
+		if ($this->options['searchWithAlias']) {
 			$this->options['counter'] = count($countBuilder->get());
-		}
-		else
-		{
+		} else {
 			$this->options['counter'] = $countBuilder->count();
 		}
 
@@ -121,53 +114,53 @@ class QueryEngine extends \Chumper\Datatable\Engines\BaseEngine
 	 */
 	private function getCollection($builder)
 	{
-		if($this->collection == null)
-		{
-			if($this->skip > 0)
-			{
+		if ($this->collection == null) {
+			if ($this->skip > 0) {
 				$builder = $builder->skip($this->skip);
 			}
-			if($this->limit > 0)
-			{
+			if ($this->limit > 0) {
 				$builder = $builder->take($this->limit);
 			}
 			//dd($this->builder->toSql());
 			$this->collection = $builder->get();
 
-			if(is_array($this->collection))
+			if (is_array($this->collection)) {
 				$this->collection = new Collection($this->collection);
+			}
 		}
 		return $this->collection;
 	}
 
 	private function doInternalSearch($builder, $columns)
 	{
-		if (!empty($this->search)) {
+		if ( ! empty($this->search)) {
 			$this->buildSearchQuery($builder, $columns);
 		}
 
-		if (!empty($this->columnSearches)) {
+		if ( ! empty($this->columnSearches)) {
 			$this->buildSingleColumnSearches($builder);
 		}
 
 		return $builder;
 	}
+
 	private function buildSearchQuery($builder, $columns)
 	{
 		$like = $this->options['searchOperator'];
 		$search = $this->search;
 		$exact = $this->exactWordSearch;
-		$builder = $builder->where(function($query) use ($columns, $search, $like, $exact) {
+		$builder = $builder->where(function ($query) use ($columns, $search, $like, $exact) {
 			foreach ($columns as $c) {
 				//column to CAST following the pattern column:newType:[maxlength]
-				if(strrpos($c, ':')){
+				if (strrpos($c, ':')) {
 					$c = explode(':', $c);
-					if(isset($c[2]))
+					if (isset($c[2])) {
 						$c[1] .= "($c[2])";
-					$query->orWhereRaw("cast($c[0] as $c[1]) ".$like." ?", array($exact ? "$search" : "%$search%"));
+					}
+					$query->orWhereRaw("cast($c[0] as $c[1]) " . $like . " ?", [$exact ? "$search" : "%$search%"]);
+				} else {
+					$query->orWhere($c, $like, $exact ? $search : '%' . $search . '%');
 				}
-				else
-					$query->orWhere($c,$like,$exact ? $search : '%'.$search.'%');
 			}
 		});
 		return $builder;
@@ -187,27 +180,21 @@ class QueryEngine extends \Chumper\Datatable\Engines\BaseEngine
 		$this->doPostQueryEvents($this->resultCollection);
 
 		$self = $this;
-		$this->resultCollection = $this->resultCollection->map(function($row) use ($columns,$self) {
-			$entry = array();
+		$this->resultCollection = $this->resultCollection->map(function ($row) use ($columns, $self) {
+			$entry = [];
 			// add class and id if needed
-			if(!is_null($self->getRowClass()) && is_callable($self->getRowClass()))
-			{
-				$entry['DT_RowClass'] = call_user_func($self->getRowClass(),$row);
+			if ( ! is_null($self->getRowClass()) && is_callable($self->getRowClass())) {
+				$entry['DT_RowClass'] = call_user_func($self->getRowClass(), $row);
 			}
-			if(!is_null($self->getRowId()) && is_callable($self->getRowId()))
-			{
-				$entry['DT_RowId'] = call_user_func($self->getRowId(),$row);
+			if ( ! is_null($self->getRowId()) && is_callable($self->getRowId())) {
+				$entry['DT_RowId'] = call_user_func($self->getRowId(), $row);
 			}
 			$i = 0;
-			foreach ($columns as $col)
-			{
-				if($self->getAliasMapping())
-				{
-					$entry[$col->getName()] =  $col->run($row);
-				}
-				else
-				{
-					$entry[$i] =  $col->run($row);
+			foreach ($columns as $col) {
+				if ($self->getAliasMapping()) {
+					$entry[$col->getName()] = $col->run($row);
+				} else {
+					$entry[$i] = $col->run($row);
 				}
 				$i++;
 			}
@@ -219,22 +206,20 @@ class QueryEngine extends \Chumper\Datatable\Engines\BaseEngine
 	private function doInternalOrder($builder, $columns)
 	{
 		//var_dump($this->orderColumn);
-		if(!is_null($this->orderColumn))
-		{
+		if ( ! is_null($this->orderColumn)) {
 			$i = 0;
-			foreach($columns as $col)
-			{
+			foreach ($columns as $col) {
 
-				if($i === (int) $this->orderColumn[0])
-				{
-					if(strrpos($this->orderColumn[1], ':')){
+				if ($i === (int)$this->orderColumn[0]) {
+					if (strrpos($this->orderColumn[1], ':')) {
 						$c = explode(':', $this->orderColumn[1]);
-						if(isset($c[2]))
+						if (isset($c[2])) {
 							$c[1] .= "($c[2])";
-						$builder = $builder->orderByRaw("cast($c[0] as $c[1]) ".$this->orderDirection);
-					}
-					else
+						}
+						$builder = $builder->orderByRaw("cast($c[0] as $c[1]) " . $this->orderDirection);
+					} else {
 						$builder = $builder->orderBy($col->getName(), $this->orderDirection);
+					}
 					return $builder;
 				}
 				$i++;

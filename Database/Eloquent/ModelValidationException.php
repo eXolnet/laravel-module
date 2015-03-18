@@ -2,7 +2,8 @@
 
 use Exolnet\Core\Exceptions\ValidationException;
 
-class ModelValidationException extends ValidationException {
+class ModelValidationException extends ValidationException
+{
 	/**
 	 * The messages list
 	 *
@@ -13,17 +14,17 @@ class ModelValidationException extends ValidationException {
 	/**
 	 * Constructor
 	 *
-	 * @param array      $errors
-	 * @param string     $message
-	 * @param integer    $code
-	 * @param exception  $previous
+	 * @param array     $errors
+	 * @param string    $message
+	 * @param integer   $code
+	 * @param exception $previous
 	 */
 	public function __construct(array $messages, $code = 0, Exception $previous = null)
 	{
 		$this->messages = $messages;
 		$errors = [];
 
-		array_walk_recursive($messages, function($item) use (&$errors) {
+		array_walk_recursive($messages, function ($item) use (&$errors) {
 			$errors[] = $item;
 		});
 
