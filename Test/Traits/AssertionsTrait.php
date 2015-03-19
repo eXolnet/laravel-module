@@ -1,8 +1,8 @@
 <?php namespace Exolnet\Test\Traits;
 
 use Closure;
-use HttpException;
 use Illuminate\Http\Request;
+use Symfony\Component\HttpKernel\Exception\HttpException;
 use View;
 
 trait AssertionsTrait {
@@ -22,8 +22,7 @@ trait AssertionsTrait {
 			$testCase($this);
 
 			$this->assertFalse(true, "An HttpException should have been thrown by the provided Closure.");
-		} catch (HttpException $e)
-		{
+		} catch (HttpException $e) {
 			// assertResponseStatus() won't work because the response object is null
 			$this->assertEquals(
 				$expectedStatusCode,
