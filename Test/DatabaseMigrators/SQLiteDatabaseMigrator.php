@@ -31,11 +31,16 @@ class SQLiteDatabaseMigrator extends DatabaseMigrator
 		} else {
 			$this->restore();
 		}
+	}
 
+	protected function configurePragma()
+	{
 		// Enable foreign keys for the current connection/file
 		\DB::statement('PRAGMA foreign_keys = ON;');
 		// Create sqlite-journal in memory only (instead of creating disk files)
 		\DB::statement('PRAGMA journal_mode = MEMORY;');
+		// Do not wait for OS after sending write commands
+		\DB::statement('PRAGMA synchronous = OFF;');
 	}
 
 	protected function initialMigration()
@@ -49,6 +54,8 @@ class SQLiteDatabaseMigrator extends DatabaseMigrator
 		$this->emptyAndChmod($this->file, '');
 		$this->emptyAndChmod($this->cloneFile, '');
 
+		$this->configurePragma();
+
 		Artisan::call('migrate');
 		Artisan::call('db:seed');
 
@@ -60,6 +67,8 @@ class SQLiteDatabaseMigrator extends DatabaseMigrator
 	protected function restore()
 	{
 		$this->filesystem->copy($this->cloneFile, $this->file);
+
+		$this->configurePragma();
 	}
 
 	/**
