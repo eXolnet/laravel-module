@@ -4,6 +4,7 @@ use Exception;
 use Illuminate\Support\Contracts\ArrayableInterface;
 use Illuminate\Support\Contracts\JsonableInterface;
 use JsonSerializable;
+use \Illuminate\Validation\Validator;
 
 class ValidationException extends Exception
 	implements ArrayableInterface, JsonableInterface, JsonSerializable
@@ -14,6 +15,10 @@ class ValidationException extends Exception
 	 * @var array
 	 */
 	protected $errors;
+	/**
+	 * @var \Illuminate\Validation\Validator
+	 */
+	protected $validator;
 
 	/**
 	 * Constructor
@@ -34,6 +39,25 @@ class ValidationException extends Exception
 
 		// Construct an exception
 		parent::__construct($message, $code, $previous);
+	}
+
+	/**
+	 * @return \Illuminate\Validation\Validator
+	 */
+	public function getValidator()
+	{
+		return $this->validator;
+	}
+
+	/**
+	 * @param \Illuminate\Validation\Validator $validator
+	 * @return $this
+	 */
+	public function setValidator(Validator $validator)
+	{
+		$this->validator = $validator;
+
+		return $this;
 	}
 
 	/**
