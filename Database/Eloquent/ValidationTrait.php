@@ -8,7 +8,7 @@ trait ValidationTrait
 	/**
 	 * The last Validator instance.
 	 *
-	 * @var Validator
+	 * @var \Validator
 	 */
 	protected $validator;
 
@@ -37,7 +37,7 @@ trait ValidationTrait
 	/**
 	 * Get the last validator.
 	 *
-	 * @return Validator|null
+	 * @return \Validator|null
 	 */
 	public function getValidator()
 	{
@@ -90,7 +90,7 @@ trait ValidationTrait
 	/**
 	 * Validate the model and throw an Exception if it's invalid.
 	 *
-	 * @throws ModelValidationException
+	 * @throws \Exolnet\Database\Eloquent\ModelValidationException
 	 * @return void
 	 */
 	public function shouldBeValid($attributes = null)
@@ -98,7 +98,7 @@ trait ValidationTrait
 		if ( ! $this->validate($attributes)) {
 			$message = $this->getValidatorMessages();
 
-			throw new ModelValidationException($message);
+			throw (new ModelValidationException($message))->setValidator($this->validator);
 		}
 	}
 
@@ -126,6 +126,7 @@ trait ValidationTrait
 	 * Note: Code taken from Ardent::buildUniqueExclusionRules.
 	 *
 	 * @param array $rules
+	 * @return array
 	 */
 	protected function buildUniqueRules(array $rules = [])
 	{
