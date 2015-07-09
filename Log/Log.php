@@ -1,5 +1,6 @@
 <?php namespace Exolnet\Log;
 
+use App;
 use Config;
 use Exolnet\Log\Processor\LaravelProcessor;
 use Gelf\Publisher;
@@ -23,6 +24,10 @@ class Log
 
 	public static function setupHandler()
 	{
+		if (App::environment('testing')) {
+			return;
+		}
+
 		$monolog = LaravelLog::getMonolog();
 		$monolog->pushHandler(new GelfHandler(new Publisher(new UdpTransport(Config::get('log.host', 'localhost'), Config::get('log.port', 12201))), Logger::ERROR));
 		$monolog->pushProcessor(new IntrospectionProcessor());
