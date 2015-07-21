@@ -2,6 +2,7 @@
 
 use App;
 use Closure;
+use Config;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Route as LaravelRoute;
 use Illuminate\Routing\Router as LaravelRouter;
@@ -18,13 +19,12 @@ class Router extends LaravelRouter
 	 */
 	protected $supportedLocales = [];
 
-	/**
-	 * @var string
-	 */
-	protected $baseLocale;
-
 	//==========================================================================
 
+	/**
+	 * @param \Closure   $callback
+	 * @param array|null $locales
+	 */
 	public function groupLocales(Closure $callback, array $locales = null)
 	{
 		if ($locales === null) {
@@ -40,6 +40,9 @@ class Router extends LaravelRouter
 		}
 	}
 
+	/**
+	 * @return string|null
+	 */
 	public function getLastLocale()
 	{
 		if (count($this->localeStack) === 0) {
@@ -50,7 +53,10 @@ class Router extends LaravelRouter
 	}
 
 	/**
-	 * @docInherit
+	 * @param array|string $methods
+	 * @param string       $uri
+	 * @param string       $action
+	 * @return \Exolnet\Routing\Route|\Illuminate\Routing\Route
 	 */
 	protected function newRoute($methods, $uri, $action)
 	{
@@ -64,7 +70,10 @@ class Router extends LaravelRouter
 	}
 
 	/**
-	 * @docInherit
+	 * @param string $prefix
+	 * @param string $resource
+	 * @param string $method
+	 * @return string
 	 */
 	protected function getGroupResourceName($prefix, $resource, $method)
 	{
@@ -78,84 +87,19 @@ class Router extends LaravelRouter
 		return str_replace($locale . '.', '', $prefix);
 	}
 
+	/**
+	 * @return array
+	 */
+	protected function getSupportedLocales()
+	{
+		return Config::get('app.supported_locales', []);
+	}
+
 	//==========================================================================
 
 	/**
-	 * @docInherit
+	 * @return array
 	 */
-	public function dispatch(Request $request)
-	{
-		// Set locale
-		$initialLocale = App::getLocale();
-		$locale = $this->extractLocale($request);
-
-		App::setLocale($locale);
-		setlocale(LC_COLLATE, $locale . '_CA.utf8');
-		setlocale(LC_CTYPE, $locale . '_CA.utf8');
-		setlocale(LC_TIME, $locale . '_CA.utf8');
-
-		$this->storeLocale($locale);
-
-		// Dispatch request
-		$response = parent::dispatch($request);
-
-		// Reset the locale
-		App::setLocale($initialLocale);
-
-		return $response;
-	}
-
-	//==========================================================================
-
-	public function setSupportedLocales(array $locales)
-	{
-		$this->supportedLocales = $locales;
-	}
-
-	public function getSupportedLocales()
-	{
-		return $this->supportedLocales;
-	}
-
-	public function isSupportedLocale($locale)
-	{
-		return in_array($locale, $this->supportedLocales);
-	}
-
-	public function getBaseLocale()
-	{
-		return $this->baseLocale ?: reset($this->supportedLocales);
-	}
-
-	public function setBaseLocale($locale)
-	{
-		if ( ! $this->isSupportedLocale($locale)) {
-			throw new \InvalidArgumentException('The locale ' . $locale . ' is not supported');
-		}
-
-		$this->baseLocale = $locale;
-	}
-
-	protected function extractLocale(Request $request)
-	{
-		// 1. Try to extract the locale by with the first URI segment
-		$locale = $request->segment(1);
-
-		if ($this->isSupportedLocale($locale)) {
-			return $locale;
-		}
-
-		// Default locale
-		return $this->getBaseLocale();
-	}
-
-	protected function storeLocale($locale)
-	{
-		# code...
-	}
-
-	//==========================================================================
-
 	public function currentAlternates()
 	{
 		$route = $this->current();
@@ -167,6 +111,10 @@ class Router extends LaravelRouter
 		return $this->alternates($route);
 	}
 
+	/**
+	 * @param \Illuminate\Routing\Route $route
+	 * @return array
+	 */
 	public function alternates(LaravelRoute $route)
 	{
 		if ( ! $route instanceof Route) {
@@ -185,6 +133,13 @@ class Router extends LaravelRouter
 		return $alternates;
 	}
 
+	/**
+	 * @param string $resource
+	 * @param string $controller
+	 * @param string $method
+	 * @param string $options
+	 * @return array
+	 */
 	protected function getResourceAction($resource, $controller, $method, $options)
 	{
 		$name = $this->getResourceName($resource, $method, $options);
