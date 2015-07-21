@@ -2,6 +2,7 @@
 
 use App;
 use Closure;
+use Config;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Route as LaravelRoute;
 use Illuminate\Routing\Router as LaravelRouter;
@@ -17,11 +18,6 @@ class Router extends LaravelRouter
 	 * @var array
 	 */
 	protected $supportedLocales = [];
-
-	/**
-	 * @var string
-	 */
-	protected $baseLocale;
 
 	//==========================================================================
 
@@ -94,8 +90,6 @@ class Router extends LaravelRouter
 		setlocale(LC_CTYPE, $locale . '_CA.utf8');
 		setlocale(LC_TIME, $locale . '_CA.utf8');
 
-		$this->storeLocale($locale);
-
 		// Dispatch request
 		$response = parent::dispatch($request);
 
@@ -107,33 +101,19 @@ class Router extends LaravelRouter
 
 	//==========================================================================
 
-	public function setSupportedLocales(array $locales)
-	{
-		$this->supportedLocales = $locales;
-	}
-
 	public function getSupportedLocales()
 	{
-		return $this->supportedLocales;
+		return Config::get('app.supported_locales', []);
 	}
 
 	public function isSupportedLocale($locale)
 	{
-		return in_array($locale, $this->supportedLocales);
+		return in_array($locale, $this->getSupportedLocales());
 	}
 
 	public function getBaseLocale()
 	{
-		return $this->baseLocale ?: reset($this->supportedLocales);
-	}
-
-	public function setBaseLocale($locale)
-	{
-		if ( ! $this->isSupportedLocale($locale)) {
-			throw new \InvalidArgumentException('The locale ' . $locale . ' is not supported');
-		}
-
-		$this->baseLocale = $locale;
+		return Config::get('app.locale', reset($this->getSupportedLocales()));
 	}
 
 	protected function extractLocale(Request $request)
@@ -147,11 +127,6 @@ class Router extends LaravelRouter
 
 		// Default locale
 		return $this->getBaseLocale();
-	}
-
-	protected function storeLocale($locale)
-	{
-		# code...
 	}
 
 	//==========================================================================
