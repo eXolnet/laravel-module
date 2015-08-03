@@ -6,6 +6,7 @@ class EnvironmentDetector
 		'development.exolnet.com' => 'local',
 		'staging.exolnet.com'     => 'staging',
 		'testing.exolnet.com'     => 'staging',
+		'qa.exolnet.com'          => 'staging',
 	];
 
 	/**
