@@ -1,0 +1,32 @@
+{
+	"name": "exolnet/test",
+	"description": "",
+	"license": "MIT",
+	"keywords": ["exolnet", "laravel", "test"],
+	"authors": [
+		{
+			"name": "Tom Rochette",
+			"email": "trochette@exolnet.com"
+		}
+	],
+	"require": {
+		"php": ">=5.6.0",
+
+		"illuminate/database": "~4.2",
+		"illuminate/filesystem": "~4.2",
+		"illuminate/http": "~4.2",
+		"illuminate/support": "~4.2",
+		"illuminate/view": "~4.2"
+	},
+	"autoload": {
+		"psr-4": {
+			"Exolnet\\Test\\": ""
+		}
+	},
+	"extra": {
+		"branch-alias": {
+			"dev-master": "1.0-dev"
+		}
+	},
+	"minimum-stability": "dev"
+}

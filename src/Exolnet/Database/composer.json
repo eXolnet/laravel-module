@@ -1,0 +1,37 @@
+{
+	"name": "exolnet/database",
+	"description": "",
+	"license": "MIT",
+	"keywords": ["exolnet", "laravel", "database"],
+	"authors": [
+		{
+			"name": "Alexandre D'Eschambeault",
+			"email": "adeschambeault@exolnet.com"
+		},
+		{
+			"name": "Tom Rochette",
+			"email": "trochette@exolnet.com"
+		},
+		{
+			"name": "Martin Blanchette",
+			"email": "mblanchette@exolnet.com"
+		}
+	],
+	"require": {
+		"php": ">=5.6.0",
+
+		"illuminate/database": "~4.2",
+		"illuminate/support": "~4.2"
+	},
+	"autoload": {
+		"psr-4": {
+			"Exolnet\\Database\\": ""
+		}
+	},
+	"extra": {
+		"branch-alias": {
+			"dev-master": "1.0-dev"
+		}
+	},
+	"minimum-stability": "dev"
+}
