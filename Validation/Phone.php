@@ -6,12 +6,12 @@ use libphonenumber\PhoneNumberUtil;
 class Phone
 {
 	/**
-	 * @param $attribute
-	 * @param $value
-	 * @param $parameters
+	 * @param string $attribute
+	 * @param string $value
+	 * @param array $parameters
 	 * @return bool
 	 */
-	public static function isValid($attribute, $value, $parameters)
+	public function isValid($attribute, $value, $parameters)
 	{
 		try {
 			$default_region = 'CA';
