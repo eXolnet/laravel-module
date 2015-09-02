@@ -13,7 +13,8 @@ class RuleBuilder
 		foreach ($data as $key => $value) {
 			foreach ($languages as $language) {
 				$newKey = str_replace('$lang', $language, $key);
-				$result[$newKey] = $value;
+				$newValue = str_replace('$lang', $language, $value);
+				$result[$newKey] = $newValue;
 			}
 		}
 		return $result;
