@@ -120,9 +120,9 @@ trait AssertionsTrait {
 		$this->assertInstanceOf('Symfony\Component\HttpFoundation\StreamedResponse', $response);
 	}
 
-	public function assertNotice($type, $message = null)
+	public function assertNotice($type)
 	{
-		$this->assertSessionHas('notice_'.$type, $message);
+		$this->assertSessionHas('notice_'.$type);
 	}
 
 	/**
