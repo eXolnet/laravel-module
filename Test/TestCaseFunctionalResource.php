@@ -23,7 +23,7 @@ abstract class TestCaseFunctionalResource extends TestCaseFunctional {
 
 	public function testIndexGet()
 	{
-		$this->beAdmin()->get($this->getBasePath());
+		$this->get($this->getBasePath());
 
 		$this->assertResponseOk();
 	}
@@ -40,7 +40,7 @@ abstract class TestCaseFunctionalResource extends TestCaseFunctional {
 
 	public function testCreateGet()
 	{
-		$this->beAdmin()->get($this->getBasePath().'/create');
+		$this->get($this->getBasePath().'/create');
 
 		$this->assertResponseOk();
 	}
@@ -57,7 +57,7 @@ abstract class TestCaseFunctionalResource extends TestCaseFunctional {
 
 	public function testStorePost(array $data = [])
 	{
-		$this->beAdmin()->post($this->getBasePath(), $data);
+		$this->post($this->getBasePath(), $data);
 
 		$this->displayErrors();
 		$this->assertRedirectedTo($this->storeRedirect());
@@ -71,7 +71,7 @@ abstract class TestCaseFunctionalResource extends TestCaseFunctional {
 
 	public function testStoreEmptyPost()
 	{
-		$this->beAdmin()->post($this->getBasePath());
+		$this->post($this->getBasePath());
 
 		$this->assertRedirectedTo($this->getBasePath().'/create');
 		$this->assertNotice('error');
@@ -91,12 +91,12 @@ abstract class TestCaseFunctionalResource extends TestCaseFunctional {
 	{
 		$this->expectResponseMissing();
 
-		$this->beAdmin()->put($this->getBasePath().'/0');
+		$this->put($this->getBasePath().'/0');
 	}
 
 	public function testUpdatePost(array $data = [])
 	{
-		$this->beAdmin()->put($this->getBasePath().'/1', $data);
+		$this->put($this->getBasePath().'/1', $data);
 
 		$this->displayErrors();
 		$this->assertRedirectedTo($this->updateRedirect());
@@ -110,7 +110,7 @@ abstract class TestCaseFunctionalResource extends TestCaseFunctional {
 
 	public function testUpdateEmptyPost()
 	{
-		$this->beAdmin()->put($this->getBasePath().'/1');
+		$this->put($this->getBasePath().'/1');
 
 		$this->assertRedirectedTo($this->getBasePath().'/1/edit');
 		$this->assertNotice('error');
@@ -118,7 +118,7 @@ abstract class TestCaseFunctionalResource extends TestCaseFunctional {
 
 	public function testUpdateInvalidPost(array $data = [])
 	{
-		$this->beAdmin()->put($this->getBasePath().'/1', $data);
+		$this->put($this->getBasePath().'/1', $data);
 
 		$this->assertRedirectedTo($this->getBasePath().'/1/edit');
 		$this->assertNotice('error');
@@ -136,7 +136,7 @@ abstract class TestCaseFunctionalResource extends TestCaseFunctional {
 
 	public function testDestroyGet()
 	{
-		$this->beAdmin()->delete($this->getBasePath().'/1');
+		$this->delete($this->getBasePath().'/1');
 
 		$this->displayErrors();
 		$this->assertRedirectedTo($this->destroyRedirect());
@@ -152,7 +152,7 @@ abstract class TestCaseFunctionalResource extends TestCaseFunctional {
 	{
 		$this->expectResponseMissing();
 
-		$this->beAdmin()->delete($this->getBasePath().'/0');
+		$this->delete($this->getBasePath().'/0');
 	}
 
 	protected function displayErrors()
