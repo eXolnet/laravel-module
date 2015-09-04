@@ -211,14 +211,6 @@ abstract class TestCaseFunctionalResource extends TestCaseFunctional {
 		$this->delete($this->getBasePath().'/0');
 	}
 
-	protected function displayErrors()
-	{
-		$errors = $this->app['session.store']->get('notice_error');
-		if ($errors) {
-			$this->assertSame([], $errors, 'There were errors...');
-		}
-	}
-
 	protected function checkTested($action)
 	{
 		if ( ! in_array($action, $this->getTestedActions())) {

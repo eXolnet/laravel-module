@@ -20,4 +20,13 @@ class TestCaseFunctional extends \TestCase {
 
 		throw new BadMethodCallException;
 	}
+
+	protected function displayErrors()
+	{
+		$errors = $this->app['session.store']->get('notice_error');
+		if ($errors) {
+			$this->assertSame([], $errors, 'There were errors...');
+		}
+	}
+
 }
