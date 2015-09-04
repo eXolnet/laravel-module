@@ -97,6 +97,27 @@ abstract class TestCaseFunctionalResource extends TestCaseFunctional {
 	}
 
 	//==========================================================================
+	// Edit
+	//==========================================================================
+
+	public function testEditRouteExists()
+	{
+		$this->checkTested('edit');
+
+		$this->assertRouteExists('GET', $this->getBasePath().'/1/edit');
+		$this->assertRouteMatchesAction('GET', $this->getBasePath().'/1/edit', $this->getController().'@edit');
+	}
+
+	public function testEditGet()
+	{
+		$this->checkTested('edit');
+
+		$this->get($this->getBasePath().'/1/edit');
+
+		$this->assertResponseOk();
+	}
+
+	//==========================================================================
 	// Update
 	//==========================================================================
 
