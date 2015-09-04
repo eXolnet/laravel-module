@@ -11,18 +11,27 @@ abstract class TestCaseFunctionalResource extends TestCaseFunctional {
 	 */
 	public abstract function getController();
 
+	public function getTestedActions()
+	{
+		return ['index', 'create', 'store', 'edit', 'update', 'destroy'];
+	}
+
 	//==========================================================================
 	// Index
 	//==========================================================================
 
 	public function testIndexRouteExists()
 	{
+		$this->checkTested('index');
+
 		$this->assertRouteExists('GET', $this->getBasePath());
 		$this->assertRouteMatchesAction('GET', $this->getBasePath(), $this->getController().'@index');
 	}
 
 	public function testIndexGet()
 	{
+		$this->checkTested('index');
+
 		$this->get($this->getBasePath());
 
 		$this->assertResponseOk();
@@ -34,12 +43,16 @@ abstract class TestCaseFunctionalResource extends TestCaseFunctional {
 
 	public function testCreateRouteExists()
 	{
+		$this->checkTested('create');
+
 		$this->assertRouteExists('GET', $this->getBasePath().'/create');
 		$this->assertRouteMatchesAction('GET', $this->getBasePath().'/create', $this->getController().'@create');
 	}
 
 	public function testCreateGet()
 	{
+		$this->checkTested('create');
+
 		$this->get($this->getBasePath().'/create');
 
 		$this->assertResponseOk();
@@ -51,12 +64,16 @@ abstract class TestCaseFunctionalResource extends TestCaseFunctional {
 
 	public function testStoreRouteExists()
 	{
+		$this->checkTested('store');
+
 		$this->assertRouteExists('POST', $this->getBasePath());
 		$this->assertRouteMatchesAction('POST', $this->getBasePath(), $this->getController().'@store');
 	}
 
 	public function testStorePost(array $data = [])
 	{
+		$this->checkTested('store');
+
 		$this->post($this->getBasePath(), $data);
 
 		$this->displayErrors();
@@ -71,6 +88,8 @@ abstract class TestCaseFunctionalResource extends TestCaseFunctional {
 
 	public function testStoreEmptyPost()
 	{
+		$this->checkTested('store');
+
 		$this->post($this->getBasePath());
 
 		$this->assertRedirectedTo($this->getBasePath().'/create');
@@ -83,12 +102,16 @@ abstract class TestCaseFunctionalResource extends TestCaseFunctional {
 
 	public function testUpdateRouteExists()
 	{
+		$this->checkTested('update');
+
 		$this->assertRouteExists('PUT', $this->getBasePath().'/1');
 		$this->assertRouteMatchesAction('PUT', $this->getBasePath().'/1', $this->getController().'@update');
 	}
 
 	public function testUpdateMissingPost()
 	{
+		$this->checkTested('update');
+
 		$this->expectResponseMissing();
 
 		$this->put($this->getBasePath().'/0');
@@ -96,6 +119,8 @@ abstract class TestCaseFunctionalResource extends TestCaseFunctional {
 
 	public function testUpdatePost(array $data = [])
 	{
+		$this->checkTested('update');
+
 		$this->put($this->getBasePath().'/1', $data);
 
 		$this->displayErrors();
@@ -110,6 +135,8 @@ abstract class TestCaseFunctionalResource extends TestCaseFunctional {
 
 	public function testUpdateEmptyPost()
 	{
+		$this->checkTested('update');
+
 		$this->put($this->getBasePath().'/1');
 
 		$this->assertRedirectedTo($this->getBasePath().'/1/edit');
@@ -118,6 +145,8 @@ abstract class TestCaseFunctionalResource extends TestCaseFunctional {
 
 	public function testUpdateInvalidPost(array $data = [])
 	{
+		$this->checkTested('update');
+
 		$this->put($this->getBasePath().'/1', $data);
 
 		$this->assertRedirectedTo($this->getBasePath().'/1/edit');
@@ -130,12 +159,16 @@ abstract class TestCaseFunctionalResource extends TestCaseFunctional {
 
 	public function testDestroyRouteExists()
 	{
+		$this->checkTested('destroy');
+
 		$this->assertRouteExists('DELETE', $this->getBasePath().'/1');
 		$this->assertRouteMatchesAction('DELETE', $this->getBasePath().'/1', $this->getController().'@destroy');
 	}
 
 	public function testDestroyGet()
 	{
+		$this->checkTested('destroy');
+
 		$this->delete($this->getBasePath().'/1');
 
 		$this->displayErrors();
@@ -150,6 +183,8 @@ abstract class TestCaseFunctionalResource extends TestCaseFunctional {
 
 	public function testDestroyMissingGet()
 	{
+		$this->checkTested('destroy');
+
 		$this->expectResponseMissing();
 
 		$this->delete($this->getBasePath().'/0');
@@ -160,6 +195,13 @@ abstract class TestCaseFunctionalResource extends TestCaseFunctional {
 		$errors = $this->app['session.store']->get('notice_error');
 		if ($errors) {
 			$this->assertSame([], $errors, 'There were errors...');
+		}
+	}
+
+	protected function checkTested($action)
+	{
+		if ( ! in_array($action, $this->getTestedActions())) {
+			$this->markTestSkipped('Action "'.$action.'" is not tested for this controller');
 		}
 	}
 }
