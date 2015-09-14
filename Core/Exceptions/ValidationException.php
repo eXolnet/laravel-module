@@ -3,12 +3,11 @@
 use Exception;
 use Illuminate\Support\Contracts\ArrayableInterface;
 use Illuminate\Support\Contracts\JsonableInterface;
+use Illuminate\Validation\Validator;
 use JsonSerializable;
-use \Illuminate\Validation\Validator;
 
 class ValidationException extends Exception
-	implements ArrayableInterface, JsonableInterface, JsonSerializable
-{
+	implements ArrayableInterface, JsonableInterface, JsonSerializable {
 	/**
 	 * The errors list
 	 *
@@ -58,6 +57,18 @@ class ValidationException extends Exception
 		$this->validator = $validator;
 
 		return $this;
+	}
+
+	/**
+	 * @param \Illuminate\Validation\Validator $validator
+	 * @param string|null                      $message
+	 * @param int                              $code
+	 * @param \Exception                       $previous
+	 * @return static
+	 */
+	public static function fromValidator(Validator $validator, $message = null, $code = 0, Exception $previous = null)
+	{
+		return (new static($message ?: $validator->errors()->all(), $code, $previous))->setValidator($validator);
 	}
 
 	/**
