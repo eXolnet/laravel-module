@@ -5,7 +5,6 @@ use Exception;
 use Exolnet\Test\Traits\AssertionsTrait;
 use Faker\Factory as FakerFactory;
 use Mockery as m;
-use Route;
 
 class TestCase extends \Illuminate\Foundation\Testing\TestCase {
 	use AssertionsTrait;
@@ -31,17 +30,32 @@ class TestCase extends \Illuminate\Foundation\Testing\TestCase {
 	protected static $forceBoot = false;
 
 	/**
+	 * @var bool
+	 */
+	protected static $environmentSetup = false;
+
+	/**
+	 * The base URL to use while testing the application.
+	 *
+	 * @var string
+	 */
+	protected $baseUrl = 'http://localhost';
+
+	/**
 	 * Creates the application.
 	 *
-	 * @return \Symfony\Component\HttpKernel\HttpKernelInterface
+	 * @return \Illuminate\Foundation\Application
 	 */
 	public function createApplication()
 	{
-		$unitTesting = true;
+		// in src/Exolnet/src/Exolnet or vendor/exolnet/src/Exolnet
+		$app = require __DIR__ . '/../../../../../bootstrap/app.php';
 
-		$testEnvironment = 'testing';
+		$app->loadEnvironmentFrom('.env.testing');
 
-		return require __DIR__ . '/../../../bootstrap/start.php';
+		$app->make(\Illuminate\Contracts\Console\Kernel::class)->bootstrap();
+
+		return $app;
 	}
 
 	/**
@@ -66,8 +80,6 @@ class TestCase extends \Illuminate\Foundation\Testing\TestCase {
 			throw $e;
 		}
 
-		Route::enableFilters();
-
 		self::bootModels();
 	}
 
@@ -76,13 +88,15 @@ class TestCase extends \Illuminate\Foundation\Testing\TestCase {
 	 */
 	public function tearDown()
 	{
-		DB::disconnect();
-		m::close();
+		if ( ! self::$migrationFailed) {
+			DB::disconnect();
+			m::close();
 
-		$this->tearDownModels();
+			$this->tearDownModels();
 
-		$this->app->reset();
-		$this->app = null;
+			$this->app->reset();
+			$this->app = null;
+		}
 
 		parent::tearDown();
 	}
