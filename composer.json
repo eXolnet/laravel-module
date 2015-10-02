@@ -38,7 +38,9 @@
 		"exolnet/menu": "self.version",
 		"exolnet/routing": "self.version",
 		"exolnet/session": "self.version",
+		"exolnet/status": "self.version",
 		"exolnet/test": "self.version",
+		"exolnet/translation": "self.version",
 		"exolnet/user": "self.version",
 		"exolnet/validation": "self.version"
 	},

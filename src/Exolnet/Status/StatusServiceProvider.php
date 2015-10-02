@@ -1,8 +1,8 @@
-<?php namespace Exolnet;
+<?php namespace Exolnet\Status;
 
 use Illuminate\Support\ServiceProvider;
 
-class ExolnetServiceProvider extends ServiceProvider
+class StatusServiceProvider extends ServiceProvider
 {
 	/**
 	 * Bootstrap the application services.

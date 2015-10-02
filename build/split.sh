@@ -12,7 +12,9 @@ git subsplit publish --heads="master 1.0" $FLAGS src/Exolnet/Log:git@github.com:
 git subsplit publish --heads="master 1.0" $FLAGS src/Exolnet/Menu:git@github.com:exolnet/laravel-menu.git
 git subsplit publish --heads="master 1.0" $FLAGS src/Exolnet/Routing:git@github.com:exolnet/laravel-routing.git
 git subsplit publish --heads="master 1.0" $FLAGS src/Exolnet/Session:git@github.com:exolnet/laravel-session.git
+git subsplit publish --heads="master 1.0" $FLAGS src/Exolnet/Status:git@github.com:exolnet/laravel-status.git
 git subsplit publish --heads="master 1.0" $FLAGS src/Exolnet/Test:git@github.com:exolnet/laravel-test.git
+git subsplit publish --heads="master 1.0" $FLAGS src/Exolnet/Translation:git@github.com:exolnet/laravel-translation.git
 git subsplit publish --heads="master 1.0" $FLAGS src/Exolnet/User:git@github.com:exolnet/laravel-user.git
 git subsplit publish --heads="master 1.0" $FLAGS src/Exolnet/Validation:git@github.com:exolnet/laravel-validation.git
 rm -Rf .subsplit/
