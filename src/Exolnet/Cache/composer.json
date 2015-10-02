@@ -1,6 +1,6 @@
 {
-	"name": "exolnet/cache",
-	"description": "",
+	"name": "exolnet/laravel-cache",
+	"description": "The eXolnet Laravel Cache package.",
 	"license": "MIT",
 	"keywords": ["exolnet", "laravel", "cache"],
 	"authors": [

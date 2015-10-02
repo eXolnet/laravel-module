@@ -1,6 +1,6 @@
 {
-	"name": "exolnet/test",
-	"description": "",
+	"name": "exolnet/laravel-test",
+	"description": "The eXolnet Laravel Test package.",
 	"license": "MIT",
 	"keywords": ["exolnet", "laravel", "test"],
 	"authors": [

@@ -1,6 +1,6 @@
 {
-	"name": "exolnet/validation",
-	"description": "",
+	"name": "exolnet/laravel-validation",
+	"description": "The eXolnet Laravel Validation package.",
 	"license": "MIT",
 	"keywords": ["exolnet", "laravel", "validation"],
 	"authors": [
@@ -17,6 +17,9 @@
 			"Exolnet\\Validation\\": ""
 		}
 	},
+	"suggets": {
+		"giggsey/libphonenumber-for-php": "Required to validate phone numbers (~7.0)."
+	}
 	"extra": {
 		"branch-alias": {
 			"dev-master": "1.0-dev"

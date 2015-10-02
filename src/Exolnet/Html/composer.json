@@ -1,6 +1,6 @@
 {
-	"name": "exolnet/html",
-	"description": "",
+	"name": "exolnet/laravel-html",
+	"description": "The eXolnet Laravel Html package.",
 	"license": "MIT",
 	"keywords": ["exolnet", "laravel", "html"],
 	"authors": [

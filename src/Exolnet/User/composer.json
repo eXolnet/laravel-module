@@ -1,6 +1,6 @@
 {
-	"name": "exolnet/user",
-	"description": "",
+	"name": "exolnet/laravel-user",
+	"description": "The eXolnet Laravel User package.",
 	"license": "MIT",
 	"keywords": ["exolnet", "laravel", "user"],
 	"authors": [

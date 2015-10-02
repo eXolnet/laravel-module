@@ -1,6 +1,6 @@
 {
-	"name": "exolnet/foundation",
-	"description": "",
+	"name": "exolnet/laravel-foundation",
+	"description": "The eXolnet Laravel Foundation package.",
 	"license": "MIT",
 	"keywords": ["exolnet", "laravel", "foundation"],
 	"authors": [

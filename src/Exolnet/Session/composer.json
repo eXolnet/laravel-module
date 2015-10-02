@@ -1,6 +1,6 @@
 {
-	"name": "exolnet/session",
-	"description": "",
+	"name": "exolnet/laravel-session",
+	"description": "The eXolnet Laravel Session package.",
 	"license": "MIT",
 	"keywords": ["exolnet", "laravel", "session"],
 	"authors": [

@@ -1,6 +1,6 @@
 {
-	"name": "exolnet/extension",
-	"description": "",
+	"name": "exolnet/laravel-extension",
+	"description": "The eXolnet Laravel Extension package.",
 	"license": "MIT",
 	"keywords": ["exolnet", "laravel", "extension"],
 	"authors": [

@@ -1,6 +1,6 @@
 {
-	"name": "exolnet/core",
-	"description": "",
+	"name": "exolnet/laravel-core",
+	"description": "The eXolnet Laravel Core package.",
 	"license": "MIT",
 	"keywords": ["exolnet", "laravel", "core"],
 	"authors": [

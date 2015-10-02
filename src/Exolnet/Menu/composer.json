@@ -1,6 +1,6 @@
 {
-	"name": "exolnet/menu",
-	"description": "",
+	"name": "exolnet/laravel-menu",
+	"description": "The eXolnet Laravel Menu package.",
 	"license": "MIT",
 	"keywords": ["exolnet", "laravel", "menu"],
 	"authors": [

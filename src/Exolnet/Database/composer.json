@@ -1,6 +1,6 @@
 {
-	"name": "exolnet/database",
-	"description": "",
+	"name": "exolnet/laravel-database",
+	"description": "The eXolnet Laravel Database package.",
 	"license": "MIT",
 	"keywords": ["exolnet", "laravel", "database"],
 	"authors": [

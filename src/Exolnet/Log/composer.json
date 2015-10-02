@@ -1,6 +1,6 @@
 {
-	"name": "exolnet/log",
-	"description": "",
+	"name": "exolnet/laravel-log",
+	"description": "The eXolnet Laravel Log package.",
 	"license": "MIT",
 	"keywords": ["exolnet", "laravel", "log"],
 	"authors": [

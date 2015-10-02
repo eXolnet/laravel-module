@@ -1,6 +1,6 @@
 {
-	"name": "exolnet/formatter",
-	"description": "",
+	"name": "exolnet/laravel-formatter",
+	"description": "The eXolnet Laravel Formatter package.",
 	"license": "MIT",
 	"keywords": ["exolnet", "laravel", "formatter"],
 	"authors": [

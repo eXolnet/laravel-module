@@ -1,6 +1,6 @@
 {
-	"name": "exolnet/routing",
-	"description": "",
+	"name": "exolnet/laravel-routing",
+	"description": "The eXolnet Laravel Routing package.",
 	"license": "MIT",
 	"keywords": ["exolnet", "laravel", "routing"],
 	"authors": [
