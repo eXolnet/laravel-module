@@ -1,0 +1,28 @@
+{
+	"name": "exolnet/laravel-foundation",
+	"description": "The eXolnet Laravel Foundation package.",
+	"license": "MIT",
+	"keywords": ["exolnet", "laravel", "foundation"],
+	"authors": [
+		{
+			"name": "Tom Rochette",
+			"email": "trochette@exolnet.com"
+		}
+	],
+	"require": {
+		"php": ">=5.6.0",
+
+		"illuminate/foundation": "~4.2"
+	},
+	"autoload": {
+		"psr-4": {
+			"Exolnet\\Foundation\\": ""
+		}
+	},
+	"extra": {
+		"branch-alias": {
+			"dev-master": "1.0-dev"
+		}
+	},
+	"minimum-stability": "dev"
+}

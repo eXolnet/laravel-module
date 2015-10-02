@@ -1,4 +1,4 @@
-<?php namespace Exolnet\Controller;
+<?php namespace Exolnet\Status;
 
 use Controller;
 use Illuminate\Filesystem\Filesystem;
@@ -30,6 +30,10 @@ class StatusController extends Controller
 		return Response::make('OK')->header('Content-Type', 'text/plain');
 	}
 
+	/**
+	 * @return \Response
+	 * @throws \Illuminate\Filesystem\FileNotFoundException
+	 */
 	public function sha()
 	{
 		$file = base_path('REVISION');

@@ -1,0 +1,32 @@
+{
+	"name": "exolnet/laravel-user",
+	"description": "The eXolnet Laravel User package.",
+	"license": "MIT",
+	"keywords": ["exolnet", "laravel", "user"],
+	"authors": [
+		{
+			"name": "Alexandre D'Eschambeault",
+			"email": "adeschambeault@exolnet.com"
+		},
+		{
+			"name": "Tom Rochette",
+			"email": "trochette@exolnet.com"
+		}
+	],
+	"require": {
+		"php": ">=5.6.0",
+
+		"illuminate/auth": "~4.2"
+	},
+	"autoload": {
+		"psr-4": {
+			"Exolnet\\User\\": ""
+		}
+	},
+	"extra": {
+		"branch-alias": {
+			"dev-master": "1.0-dev"
+		}
+	},
+	"minimum-stability": "dev"
+}
