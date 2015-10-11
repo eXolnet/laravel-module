@@ -15,7 +15,7 @@ abstract class BaseRepository implements Repository {
 	/**
 	 * Save a new model and return the instance.
 	 *
-	 * @param  array  $attributes
+	 * @param  array $attributes
 	 * @return static
 	 */
 	public function create(array $attributes)
@@ -26,15 +26,15 @@ abstract class BaseRepository implements Repository {
 	/**
 	 * Get all of the models from the database.
 	 *
-	 * @param  array  $columns
+	 * @param  array $columns
 	 * @return \Illuminate\Database\Eloquent\Collection|static[]
 	 */
-	public function all($columns = array('*'))
+	public function all($columns = ['*'])
 	{
 		return $this->getModel()->all($columns);
 	}
 
-	public function find($id, $columns = array('*'))
+	public function find($id, $columns = ['*'])
 	{
 		return $this->getModel()->find($id, $columns);
 	}
@@ -42,7 +42,7 @@ abstract class BaseRepository implements Repository {
 	/**
 	 * Being querying a model with eager loading.
 	 *
-	 * @param  array|string  $relations
+	 * @param  array|string $relations
 	 * @return \Illuminate\Database\Eloquent\Builder|static
 	 */
 	public function with($relations)
@@ -53,7 +53,7 @@ abstract class BaseRepository implements Repository {
 	/**
 	 * Destroy the models for the given IDs.
 	 *
-	 * @param  array|int  $ids
+	 * @param  array|int $ids
 	 * @return int
 	 */
 	public function destroy($ids)
@@ -64,10 +64,10 @@ abstract class BaseRepository implements Repository {
 	/**
 	 * Update the model in the database.
 	 *
-	 * @param  array  $attributes
+	 * @param  array $attributes
 	 * @return bool|int
 	 */
-	public function update(array $attributes = array())
+	public function update(array $attributes = [])
 	{
 		return $this->getModel()->update($attributes);
 	}
@@ -75,10 +75,10 @@ abstract class BaseRepository implements Repository {
 	/**
 	 * Save the model to the database.
 	 *
-	 * @param  array  $options
+	 * @param  array $options
 	 * @return bool
 	 */
-	public function save(array $options = array())
+	public function save(array $options = [])
 	{
 		return $this->getModel()->save($options);
 	}
@@ -94,7 +94,7 @@ abstract class BaseRepository implements Repository {
 		$model = App::make($modelClass);
 
 		if ( ! $model instanceof Model) {
-			throw new RepositoryException('Class '.$modelClass.' must be an instance of Illuminate\\Database\\Eloquent\\Model.');
+			throw new RepositoryException('Class ' . $modelClass . ' must be an instance of Illuminate\\Database\\Eloquent\\Model.');
 		}
 
 		return $model;
@@ -102,7 +102,7 @@ abstract class BaseRepository implements Repository {
 
 	/**
 	 * @param string $method
-	 * @param array $args
+	 * @param array  $args
 	 * @return mixed
 	 * @throws \Exolnet\Core\Exceptions\RepositoryException
 	 */
@@ -110,8 +110,7 @@ abstract class BaseRepository implements Repository {
 	{
 		$model = $this->getModel();
 
-		switch (count($args))
-		{
+		switch (count($args)) {
 			case 0:
 				return $model->$method();
 
