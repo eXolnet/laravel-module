@@ -2,6 +2,11 @@
 
 class RoutingServiceProvider extends \Illuminate\Routing\RoutingServiceProvider
 {
+	/**
+	 * Register the Router.
+	 *
+	 * @return void
+	 */
 	protected function registerRouter()
 	{
 		$this->app['router'] = $this->app->share(function ($app) {
@@ -18,6 +23,11 @@ class RoutingServiceProvider extends \Illuminate\Routing\RoutingServiceProvider
 		});
 	}
 
+	/**
+	 * Register the URL Generator.
+	 *
+	 * @return void
+	 */
 	protected function registerUrlGenerator()
 	{
 		$this->app['url'] = $this->app->share(function ($app) {

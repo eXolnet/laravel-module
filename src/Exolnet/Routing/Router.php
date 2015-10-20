@@ -25,6 +25,10 @@ class Router extends LaravelRouter
 
 	//==========================================================================
 
+	/**
+	 * @param \Closure $callback
+	 * @param array|null $locales
+	 */
 	public function groupLocales(Closure $callback, array $locales = null)
 	{
 		if ($locales === null) {
@@ -40,6 +44,9 @@ class Router extends LaravelRouter
 		}
 	}
 
+	/**
+	 * @return string|null
+	 */
 	public function getLastLocale()
 	{
 		if (count($this->localeStack) === 0) {
@@ -107,26 +114,42 @@ class Router extends LaravelRouter
 
 	//==========================================================================
 
+	/**
+	 * @param array $locales
+	 */
 	public function setSupportedLocales(array $locales)
 	{
 		$this->supportedLocales = $locales;
 	}
 
+	/**
+	 * @return array
+	 */
 	public function getSupportedLocales()
 	{
 		return $this->supportedLocales;
 	}
 
+	/**
+	 * @param string $locale
+	 * @return bool
+	 */
 	public function isSupportedLocale($locale)
 	{
 		return in_array($locale, $this->supportedLocales);
 	}
 
+	/**
+	 * @return string|null
+	 */
 	public function getBaseLocale()
 	{
 		return $this->baseLocale ?: reset($this->supportedLocales);
 	}
 
+	/**
+	 * @param string $locale
+	 */
 	public function setBaseLocale($locale)
 	{
 		if ( ! $this->isSupportedLocale($locale)) {
@@ -136,6 +159,10 @@ class Router extends LaravelRouter
 		$this->baseLocale = $locale;
 	}
 
+	/**
+	 * @param \Illuminate\Http\Request $request
+	 * @return string|null
+	 */
 	protected function extractLocale(Request $request)
 	{
 		// 1. Try to extract the locale by with the first URI segment
@@ -149,6 +176,10 @@ class Router extends LaravelRouter
 		return $this->getBaseLocale();
 	}
 
+	/**
+	 * @param string $locale
+	 * @return void
+	 */
 	protected function storeLocale($locale)
 	{
 		# code...
@@ -156,6 +187,9 @@ class Router extends LaravelRouter
 
 	//==========================================================================
 
+	/**
+	 * @return array
+	 */
 	public function currentAlternates()
 	{
 		$route = $this->current();
@@ -167,6 +201,10 @@ class Router extends LaravelRouter
 		return $this->alternates($route);
 	}
 
+	/**
+	 * @param \Illuminate\Routing\Route $route
+	 * @return array
+	 */
 	public function alternates(LaravelRoute $route)
 	{
 		if ( ! $route instanceof Route) {
@@ -185,6 +223,13 @@ class Router extends LaravelRouter
 		return $alternates;
 	}
 
+	/**
+	 * @param string $resource
+	 * @param string $controller
+	 * @param string $method
+	 * @param array $options
+	 * @return array
+	 */
 	protected function getResourceAction($resource, $controller, $method, $options)
 	{
 		$name = $this->getResourceName($resource, $method, $options);

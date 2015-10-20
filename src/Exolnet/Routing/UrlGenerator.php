@@ -6,6 +6,14 @@ use Illuminate\Routing\UrlGenerator as LaravelUrlGenerator;
 
 class UrlGenerator extends LaravelUrlGenerator
 {
+	/**
+	 * @param  string $name
+	 * @param  mixed $parameters
+	 * @param  bool $absolute
+	 * @param  \Illuminate\Routing\Route $route
+	 * @param string|null $locale
+	 * @return string
+	 */
 	public function route($name, $parameters = [], $absolute = true, $route = null, $locale = null)
 	{
 		$name = $this->getBestRouteName($name, $locale);
@@ -25,6 +33,11 @@ class UrlGenerator extends LaravelUrlGenerator
 	//
 	// }
 
+	/**
+	 * @param string $name
+	 * @param string|null $locale
+	 * @return string
+	 */
 	protected function getBestRouteName($name, $locale = null)
 	{
 		if ($this->routes->getByName($name) !== null) {
@@ -49,6 +62,11 @@ class UrlGenerator extends LaravelUrlGenerator
 		return $name;
 	}
 
+	/**
+	 * @param string $path
+	 * @param bool|null $secure
+	 * @return string
+	 */
 	public function cdn($path, $secure = null)
 	{
 		$root = $this->getCdnUrl($secure);
@@ -56,6 +74,10 @@ class UrlGenerator extends LaravelUrlGenerator
 		return $this->removeIndex($root) . '/' . trim($path, '/');
 	}
 
+	/**
+	 * @param bool|null $secure
+	 * @return string
+	 */
 	public function getCdnUrl($secure = null)
 	{
 		$cdn_url = Config::get('app.cdn_url');
