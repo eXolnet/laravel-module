@@ -3,8 +3,11 @@
 class Bust
 {
 	/**
-	 * @param      $path
-	 * @param null $secure
+	 * Generate an asset path for the application with the file's last modification timestamp
+	 * to avoid cashing.
+	 *
+	 * @param  string    $path
+	 * @param  bool|null $secure
 	 * @return string
 	 */
 	public function asset($path, $secure = null)
