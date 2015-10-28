@@ -57,7 +57,10 @@ class SQLiteDatabaseMigrator extends DatabaseMigrator
 		$this->configurePragma();
 
 		Artisan::call('migrate');
-		Artisan::call('db:seed');
+		// TODO-TR: This may not be compatible with Laravel 5 <trochette@exolnet.com>
+		if (file_exists(app_path('database/seeds/TestSeeder.php'))) {
+			Artisan::call('db:seed', ['--class' => 'TestSeeder']);
+		}
 
 		$this->filesystem->copy($this->file, $this->cloneFile);
 
