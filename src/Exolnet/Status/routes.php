@@ -2,10 +2,10 @@
 
 Route::get('health', [
 	'as' => 'health',
-	'uses' => '\Exolnet\Controller\StatusController@health',
+	'uses' => '\Exolnet\Status\StatusController@health',
 ]);
 
 Route::get('sha', [
 	'as' => 'sha',
-	'uses' => '\Exolnet\Controller\StatusController@sha',
+	'uses' => '\Exolnet\Status\StatusController@sha',
 ]);
