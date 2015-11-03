@@ -36,6 +36,7 @@
 		"exolnet/html": "self.version",
 		"exolnet/log": "self.version",
 		"exolnet/menu": "self.version",
+		"exolnet/queue": "self.version",
 		"exolnet/routing": "self.version",
 		"exolnet/status": "self.version",
 		"exolnet/test": "self.version",
