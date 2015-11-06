@@ -2,9 +2,10 @@
 
 namespace Exolnet\Queue\Jobs;
 
+use Illuminate\Container\Container;
 use Illuminate\Queue\Jobs\Job;
 
-class ProxyJob {
+class ProxyJob extends Job {
 	/**
 	 * @var \Illuminate\Queue\Jobs\Job
 	 */
@@ -13,10 +14,12 @@ class ProxyJob {
 	/**
 	 * TenantJob constructor.
 	 *
-	 * @param \Illuminate\Queue\Jobs\Job $job
+	 * @param \Illuminate\Container\Container $container
+	 * @param \Illuminate\Queue\Jobs\Job      $job
 	 */
-	public function __construct(Job $job)
+	public function __construct(Container $container, Job $job)
 	{
+		$this->container = $container;
 		$this->job = $job;
 	}
 
@@ -59,5 +62,17 @@ class ProxyJob {
 	public function getRawBody()
 	{
 		return $this->job->getRawBody();
+	}
+
+	/**
+	 * Delete the job from the queue.
+	 *
+	 * @return void
+	 */
+	public function delete()
+	{
+		parent::delete();
+
+		$this->job->delete();
 	}
 }

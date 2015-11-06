@@ -2,6 +2,7 @@
 
 namespace Exolnet\Queue;
 
+use Exolnet\Queue\Jobs\ProxyJob;
 use Illuminate\Queue\Queue;
 use Illuminate\Queue\QueueInterface;
 
@@ -69,6 +70,10 @@ class ProxyQueue extends Queue implements QueueInterface {
 	 */
 	public function pop($queue = null)
 	{
-		return $this->queue->pop($queue);
+		$job = $this->queue->pop($queue);
+		if ( ! $job) {
+			return;
+		}
+		return new ProxyJob($this->container, $job);
 	}
 }
