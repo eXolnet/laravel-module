@@ -45,11 +45,21 @@ class TestCaseFunctional extends \TestCase {
 	public function assertSessionDoesntHave($key)
 	{
 		if (is_array($key)) {
-			return $this->assertSessionHasAll($key);
+			return $this->assertSessionDoesntHaveAll($key);
 		}
 
 		PHPUnit::assertFalse($this->app['session.store']->has($key), "Session contains key: $key");
 
+	}
+
+	public function assertSessionDoesntHaveAll($keys)
+	{
+		foreach($keys as $key){
+			if(! $this->assertSessionDoesntHave($key))
+				return false;
+		}
+
+		return true;
 	}
 
 }
