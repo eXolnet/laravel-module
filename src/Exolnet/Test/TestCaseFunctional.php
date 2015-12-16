@@ -54,12 +54,7 @@ class TestCaseFunctional extends \TestCase {
 
 	public function assertSessionDoesntHaveAll($keys)
 	{
-		foreach($keys as $key){
-			if(! $this->assertSessionDoesntHave($key))
-				return false;
-		}
-
-		return true;
+		return ! $this->assertSessionHasAll($keys);
 	}
 
 }
