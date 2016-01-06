@@ -5,6 +5,8 @@ use Closure;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Route as LaravelRoute;
 use Illuminate\Routing\Router as LaravelRouter;
+use Mockery\Exception\RuntimeException;
+use Redirect;
 
 class Router extends LaravelRouter
 {
@@ -198,5 +200,27 @@ class Router extends LaravelRouter
 		$options = array_except($options, ['as', 'uses']);
 
 		return ['as' => $name, 'uses' => $controller.'@'.$method] + $options;
+	}
+
+	//==========================================================================
+
+	/**
+	 * @param string $route
+	 * @param string|array $aliases
+	 * @throws \Mockery\Exception\RuntimeException
+	 */
+	public function alias($route, $aliases)
+	{
+		$route = $this->getRoutes()->getByName($route);
+
+		if ($route === null) {
+			throw new RuntimeException('No route named "'. $route .'" found for alias.');
+		}
+
+		foreach ((array)$aliases as $alias) {
+			$this->match($route->methods(), $alias, function() use ($route) {
+				return Redirect::route($route->getName());
+			});
+		}
 	}
 }
