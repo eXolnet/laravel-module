@@ -25,7 +25,12 @@ class Router extends LaravelRouter
 
 	//==========================================================================
 
-	public function groupLocales(Closure $callback, array $locales = null)
+	/**
+	 * @param \Closure $callback
+	 * @param array|null $locales
+	 * @param bool $avoidPrefixOnBaseLocale
+	 */
+	public function groupLocales(Closure $callback, array $locales = null, $avoidPrefixOnBaseLocale = false)
 	{
 		if ($locales === null) {
 			$locales = $this->getSupportedLocales();
@@ -34,7 +39,9 @@ class Router extends LaravelRouter
 		foreach ($locales as $locale) {
 			array_push($this->localeStack, $locale);
 
-			$this->group(['prefix' => $locale], $callback);
+			$prefix = ! $avoidPrefixOnBaseLocale || $this->baseLocale !== $locale ? $locale : '';
+
+			$this->group(['prefix' => $prefix], $callback);
 
 			array_pop($this->localeStack);
 		}
