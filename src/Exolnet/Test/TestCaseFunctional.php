@@ -26,6 +26,7 @@ class TestCaseFunctional extends \TestCase {
 	protected function displayErrors()
 	{
 		$errors = $this->app['session.store']->get('notice_error');
+		$errors = $errors ?: $this->app['session.store']->get('errors');
 		if ($errors) {
 			$this->assertSame([], $errors, 'There were errors...');
 		}
@@ -57,4 +58,10 @@ class TestCaseFunctional extends \TestCase {
 		return ! $this->assertSessionHasAll($keys);
 	}
 
+	public function setPreviousUrl($url)
+	{
+		$this->app['session.store']->setPreviousUrl($url);
+
+		return $this;
+	}
 }
