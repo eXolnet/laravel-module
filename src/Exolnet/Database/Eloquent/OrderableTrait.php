@@ -2,13 +2,15 @@
 
 trait OrderableTrait {
 	/**
-	 * Boot the soft deleting trait for a model.
-	 *
 	 * @return void
 	 */
 	public static function bootOrderableTrait()
 	{
 		static::creating(function($model) {
+			if ( ! $model->isOrderable()) {
+				return;
+			}
+
 			$order    = $model->getOrder();
 			$orderMax = $model->getOrderMax();
 
@@ -27,6 +29,10 @@ trait OrderableTrait {
 		});
 
 		static::updating(function($model) {
+			if ( ! $model->isOrderable()) {
+				return;
+			}
+
 			// Limit order
 			$orderMax = $model->getOrderMax();
 			$newOrder = max(0, min($orderMax, $model->getOrder()));
@@ -43,6 +49,10 @@ trait OrderableTrait {
 		});
 
 		static::deleting(function($model) {
+			if ( ! $model->isOrderable()) {
+				return;
+			}
+
 			$orderMax = $model->getOrderMax();
 			$order = $model->getOriginalOrder();
 
@@ -50,21 +60,42 @@ trait OrderableTrait {
 		});
 	}
 
+	/**
+	 * @return bool
+	 */
+	public function isOrderable()
+	{
+		return isset($this->orderable) ? $this->orderable : true;
+	}
+
+	/**
+	 * @return string
+	 */
 	public function getOrderColumn()
 	{
 		return isset($this->orderColumn) ? $this->orderColumn : 'order';
 	}
 
+	/**
+	 * @return mixed
+	 */
 	public function getOriginalOrder()
 	{
 		return $this->getOriginal($this->getOrderColumn());
 	}
 
+	/**
+	 * @return int|null
+	 */
 	public function getOrder()
 	{
 		return $this->getAttribute($this->getOrderColumn());
 	}
 
+	/**
+	 * @param int|null $order
+	 * @return $this
+	 */
 	protected function setOrder($order)
 	{
 		$this->setAttribute($this->getOrderColumn(), $order);
@@ -85,43 +116,72 @@ trait OrderableTrait {
 		return (array)(isset($this->orderUniqueColumns) ? $this->orderUniqueColumns : []);
 	}
 
+	/**
+	 * @return bool
+	 */
 	public function isFirst()
 	{
 		return $this->getOrder() === 0;
 	}
 
+	/**
+	 * @return bool
+	 */
 	public function isLast()
 	{
 		return $this->getOrder() === $this->getOrderMax();
 	}
 
+	/**
+	 * @return bool
+	 */
 	public function hasUniqueColumn()
 	{
 		return $this->getUniqueColumn() !== null;
 	}
 
+	/**
+	 * @return $this|\Exolnet\Database\Eloquent\OrderableTrait|void
+	 */
 	public function moveFirst()
 	{
 		return $this->moveTo(0);
 	}
 
+	/**
+	 * @return $this|\Exolnet\Database\Eloquent\OrderableTrait|void
+	 */
 	public function moveUp()
 	{
 		return $this->moveTo($this->getOrder() - 1);
 	}
 
+	/**
+	 * @return $this|\Exolnet\Database\Eloquent\OrderableTrait|void
+	 */
 	public function moveDown()
 	{
 		return $this->moveTo($this->getOrder() + 1);
 	}
 
+	/**
+	 * @return $this|\Exolnet\Database\Eloquent\OrderableTrait|void
+	 */
 	public function moveLast()
 	{
 		return $this->moveTo($this->getOrderMax());
 	}
 
+	/**
+	 * @param $newOrder
+	 * @return $this|void
+	 */
 	public function moveTo($newOrder)
 	{
+		if ( ! $this->isOrderable()) {
+			return $this;
+		}
+
 		if ( ! $this->exists) {
 			throw new \LogicException('Uncreated models could not be moved.');
 		} elseif ($this->isDirty()) {
@@ -142,8 +202,18 @@ trait OrderableTrait {
 		return $this;
 	}
 
+	/**
+	 * @param string $direction
+	 * @param int $from
+	 * @param int $to
+	 * @return void
+	 */
 	private function updateOrders($direction, $from, $to)
 	{
+		if ( ! $this->isOrderable()) {
+			return;
+		}
+
 		$query = \DB::table($this->getTable());
 
 		$this->applyUniqueColumn($query);
@@ -157,11 +227,21 @@ trait OrderableTrait {
 			->$direction($this->getOrderColumn());
 	}
 
+	/**
+	 * @param int $from
+	 * @param int $to
+	 * @return void
+	 */
 	private function incrementOrders($from, $to)
 	{
 		$this->updateOrders('increment', $from, $to);
 	}
 
+	/**
+	 * @param int $from
+	 * @param int $to
+	 * @return void
+	 */
 	private function decrementOrders($from, $to)
 	{
 		$this->updateOrders('decrement', $from, $to);
