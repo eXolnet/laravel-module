@@ -1,17 +1,18 @@
 <?php namespace Exolnet\Database\Eloquent;
 
-trait OrderableTrait {
+trait OrderableTrait
+{
 	/**
 	 * @return void
 	 */
 	public static function bootOrderableTrait()
 	{
-		static::creating(function($model) {
+		static::creating(function ($model) {
 			if ( ! $model->isOrderable()) {
 				return;
 			}
 
-			$order    = $model->getOrder();
+			$order = $model->getOrder();
 			$orderMax = $model->getOrderMax();
 
 			if ($orderMax === null) {
@@ -28,7 +29,7 @@ trait OrderableTrait {
 			}
 		});
 
-		static::updating(function($model) {
+		static::updating(function ($model) {
 			if ( ! $model->isOrderable()) {
 				return;
 			}
@@ -48,7 +49,7 @@ trait OrderableTrait {
 			}
 		});
 
-		static::deleting(function($model) {
+		static::deleting(function ($model) {
 			if ( ! $model->isOrderable()) {
 				return;
 			}
@@ -188,14 +189,14 @@ trait OrderableTrait {
 			throw new \LogicException('Dirty models could not be moved.');
 		}
 
-		$order    = $this->getOriginalOrder();
+		$order = $this->getOriginalOrder();
 		$newOrder = max(min($newOrder, $this->getOrderMax()), 0);
 
 		if ($newOrder === $order) {
 			return;
 		}
 
-		\DB::transaction(function() use ($newOrder) {
+		\DB::transaction(function () use ($newOrder) {
 			$this->setOrder($newOrder)->save();
 		});
 
@@ -204,8 +205,8 @@ trait OrderableTrait {
 
 	/**
 	 * @param string $direction
-	 * @param int $from
-	 * @param int $to
+	 * @param int    $from
+	 * @param int    $to
 	 * @return void
 	 */
 	private function updateOrders($direction, $from, $to)
@@ -222,7 +223,6 @@ trait OrderableTrait {
 			min($from, $to),
 			max($from, $to),
 		])
-			->where('formation_id', $this->formation->getId())
 			->where($this->getKeyName(), '<>', $this->getKey())
 			->$direction($this->getOrderColumn());
 	}
