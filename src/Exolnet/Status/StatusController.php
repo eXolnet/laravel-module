@@ -2,10 +2,11 @@
 
 use Controller;
 use Illuminate\Filesystem\Filesystem;
+use Illuminate\Routing\Controller as BaseController;
 use Response;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
-class StatusController extends Controller
+class StatusController extends BaseController
 {
 	/**
 	 * @var \Illuminate\Filesystem\Filesystem
