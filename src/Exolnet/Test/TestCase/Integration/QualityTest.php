@@ -1,7 +1,8 @@
 <?php namespace Exolnet\Test\TestCase\Integration;
 
+use App;
 use Exolnet\Test\TestCaseIntegration;
-use Illuminate\Contracts\Validation\UnauthorizedException;
+use Symfony\Component\HttpKernel\Exception\HttpException;
 
 class QualityTest extends TestCaseIntegration
 {
@@ -27,25 +28,34 @@ class QualityTest extends TestCaseIntegration
 
 	public function testError404()
 	{
-		$this->visit('404')->dontSee('Sorry, the page you are looking for could not be found.');
+		$this->get('404');
+
+		$this->assertResponseStatus(404);
+		$this->assertNotContains('exception_title', $this->response->getContent());
 	}
 
 	public function testError403()
 	{
 		\Route::get('403', function() {
-			throw new UnauthorizedException;
+			App::abort(403);
 		});
 
-		$this->visit('403')->dontSee('UnauthorizedException');
+		$this->get('403');
+
+		$this->assertResponseStatus(403);
+		$this->assertNotContains('exception_title', $this->response->getContent());
 	}
 
 	public function testError500()
 	{
 		\Route::get('500', function() {
-			throw new \RuntimeException;
+			throw new HttpException(500);
 		});
 
-		$this->visit('500')->dontSee('RuntimeException');
+		$this->get('500');
+
+		$this->assertResponseStatus(500);
+		$this->assertNotContains('exception_title', $this->response->getContent());
 	}
 
 	public function testFavicon()
