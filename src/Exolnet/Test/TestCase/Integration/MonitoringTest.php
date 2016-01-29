@@ -4,11 +4,6 @@ use Exolnet\Test\TestCaseIntegration;
 
 class MonitoringTest extends TestCaseIntegration
 {
-	public function testUptime()
-	{
-		$this->markTestIncomplete();
-	}
-
 	public function testGraylog()
 	{
 		$this->markTestIncomplete();
@@ -16,7 +11,7 @@ class MonitoringTest extends TestCaseIntegration
 
 	public function testGoogleAnalytics()
 	{
-		$this->markTestIncomplete();
+		$this->visit('/')->seeInElement('script', '//www.google-analytics.com/analytics.js');
 	}
 
 	public function testHealthPageIsAccessible()
