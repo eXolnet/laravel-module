@@ -1,15 +1,12 @@
 <?php namespace Exolnet\Console\Commands;
 
 use Illuminate\Console\Command;
-use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Filesystem\Filesystem;
 use Illuminate\Support\Facades\Schema;
-use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Finder\Finder;
-use Symfony\Component\Finder\SplFileInfo;
 
 class GenerateModels extends Command {
 	/**
@@ -32,11 +29,6 @@ class GenerateModels extends Command {
 	protected $files;
 
 	/**
-	 * @var \Symfony\Component\Finder\Finder
-	 */
-	protected $finder;
-
-	/**
 	 * @var string
 	 */
 	protected $namespaces;
@@ -45,14 +37,12 @@ class GenerateModels extends Command {
 	 * GenerateModels constructor.
 	 *
 	 * @param \Illuminate\Filesystem\Filesystem $files
-	 * @param \Symfony\Component\Finder\Finder  $finder
 	 */
-	public function __construct(Filesystem $files, Finder $finder)
+	public function __construct(Filesystem $files)
 	{
 		parent::__construct();
 
 		$this->files = $files;
-		$this->finder = $finder;
 	}
 
 	/**
