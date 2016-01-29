@@ -12,4 +12,4 @@ Here's a non-exhaustive list of what it does:
 
 ## License
 
-The code is licensed under the [MIT license](http://choosealicense.com/licenses/mit/). See LICENSE.
+The code is licensed under the [MIT license](http://choosealicense.com/licenses/mit/). See [LICENSE](LICENSE).

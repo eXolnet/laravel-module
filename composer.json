@@ -36,8 +36,8 @@
 		"exolnet/html": "self.version",
 		"exolnet/log": "self.version",
 		"exolnet/menu": "self.version",
+		"exolnet/queue": "self.version",
 		"exolnet/routing": "self.version",
-		"exolnet/session": "self.version",
 		"exolnet/status": "self.version",
 		"exolnet/test": "self.version",
 		"exolnet/translation": "self.version",
@@ -51,7 +51,7 @@
 	},
 	"extra": {
 		"branch-alias": {
-			"dev-master": "1.0-dev"
+			"dev-master": "1.1-dev"
 		}
 	},
 	"minimum-stability": "dev"

@@ -18,6 +18,8 @@ class DatabaseMigrator
 			Artisan::call('migrate:reset');
 		}
 		Artisan::call('migrate');
-		Artisan::call('db:seed');
+		if (file_exists(base_path('database/seeds/TestSeeder.php'))) {
+			Artisan::call('db:seed', ['--class' => 'TestSeeder']);
+		}
 	}
 }

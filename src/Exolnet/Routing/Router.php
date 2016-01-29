@@ -5,6 +5,8 @@ use Closure;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Route as LaravelRoute;
 use Illuminate\Routing\Router as LaravelRouter;
+use Mockery\Exception\RuntimeException;
+use Redirect;
 
 class Router extends LaravelRouter
 {
@@ -25,7 +27,12 @@ class Router extends LaravelRouter
 
 	//==========================================================================
 
-	public function groupLocales(Closure $callback, array $locales = null)
+	/**
+	 * @param \Closure $callback
+	 * @param array|null $locales
+	 * @param bool $avoidPrefixOnBaseLocale
+	 */
+	public function groupLocales(Closure $callback, array $locales = null, $avoidPrefixOnBaseLocale = false)
 	{
 		if ($locales === null) {
 			$locales = $this->getSupportedLocales();
@@ -34,7 +41,9 @@ class Router extends LaravelRouter
 		foreach ($locales as $locale) {
 			array_push($this->localeStack, $locale);
 
-			$this->group(['prefix' => $locale], $callback);
+			$prefix = ! $avoidPrefixOnBaseLocale || $this->baseLocale !== $locale ? $locale : '';
+
+			$this->group(['prefix' => $prefix], $callback);
 
 			array_pop($this->localeStack);
 		}
@@ -191,5 +200,27 @@ class Router extends LaravelRouter
 		$options = array_except($options, ['as', 'uses']);
 
 		return ['as' => $name, 'uses' => $controller.'@'.$method] + $options;
+	}
+
+	//==========================================================================
+
+	/**
+	 * @param string $route
+	 * @param string|array $aliases
+	 * @throws \Mockery\Exception\RuntimeException
+	 */
+	public function alias($route, $aliases)
+	{
+		$route = $this->getRoutes()->getByName($route);
+
+		if ($route === null) {
+			throw new RuntimeException('No route named "'. $route .'" found for alias.');
+		}
+
+		foreach ((array)$aliases as $alias) {
+			$this->match($route->methods(), $alias, function() use ($route) {
+				return Redirect::route($route->getName());
+			});
+		}
 	}
 }

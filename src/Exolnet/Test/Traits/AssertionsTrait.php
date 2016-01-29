@@ -77,8 +77,15 @@ trait AssertionsTrait {
 
 		// Match the request to a route
 		$route = $this->app['router']->getRoutes()->match($request);
-		$condition = $route === null || $route->getAction()['controller'] !== $action;
-		$this->assertFalse($condition, $message);
+		if ($route === null) {
+			$this->assertNotNull($route, $message);
+			return;
+		}
+
+		$controller = $route->getAction()['controller'];
+		$routeAction = starts_with($controller, '\\') ? $controller : '\\' . $controller;
+		$action = starts_with($action, '\\') ? $action : '\\' . $action;
+		$this->assertSame($routeAction, $action, $message);
 	}
 
 	public function assertIsViewResponse($response)
