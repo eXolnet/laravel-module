@@ -110,6 +110,7 @@ class FillModel extends Command {
 					continue;
 				}
 
+				$related        = '\\'. ltrim($related, '\\');
 				$relationColumn = preg_replace('/_id$/i', '', $column);
 
 				$changeUses[] = $related;
@@ -222,7 +223,7 @@ class FillModel extends Command {
 	 */
 	public function ' . $functionName . '()
 	{
-		return $this->belongsTo(\'' . $related . '\');
+		return $this->belongsTo(' . $related . '::class);
 	}',
 		];
 	}
