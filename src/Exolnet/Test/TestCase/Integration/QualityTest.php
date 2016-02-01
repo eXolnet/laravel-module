@@ -86,4 +86,40 @@ class QualityTest extends TestCaseIntegration
 
 		$this->assertTrue($hasAsciiArt);
 	}
+
+	public function testOpenSearchDescription()
+	{
+		// <link rel="search" type="application/opensearchdescription+xml" href="/opensearch.xml" title="Website">
+		$this->markTestIncomplete();
+	}
+
+	public function testDnsPrefetch()
+	{
+		// <link rel="dns-prefetch" href="//example.com">
+		$this->markTestIncomplete();
+	}
+
+	public function testPreconnect()
+	{
+		// <link rel="preconnect" href="http://css-tricks.com">
+		$this->markTestIncomplete();
+	}
+
+	public function testPrefetch()
+	{
+		// <link rel="prefetch" href="image.png">
+		$this->markTestIncomplete();
+	}
+
+	public function testPrerender()
+	{
+		// <link rel="prerender" href="http://css-tricks.com">
+		$this->markTestIncomplete();
+	}
+
+	public function testPreload()
+	{
+		// <link rel="preload" href="image.png">
+		$this->markTestIncomplete();
+	}
 }
