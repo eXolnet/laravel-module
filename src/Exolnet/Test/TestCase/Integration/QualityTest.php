@@ -16,11 +16,6 @@ class QualityTest extends TestCaseIntegration
 		$this->visit('/')->seeSelector('meta[charset]');
 	}
 
-	public function testXUACompatible()
-	{
-		$this->visit('/')->seeSelector('meta[http-equiv="X-UA-Compatible"]');
-	}
-
 	public function testViewportIsDefined()
 	{
 		$this->visit('/')->seeSelector('meta[name="viewport"]');
