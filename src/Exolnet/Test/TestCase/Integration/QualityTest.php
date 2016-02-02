@@ -87,6 +87,36 @@ class QualityTest extends TestCaseIntegration
 		$this->assertTrue($hasAsciiArt);
 	}
 
+	/**
+	 * Styles on a webpage are missing or look incorrect when the page loads in the IE9 when one
+	 * stylesheet has more than 4,095 rules.
+	 *
+	 * @see https://support.microsoft.com/en-us/kb/262161
+	 */
+	public function testCssSelectorCount()
+	{
+		$path  = public_path('**/*.css');
+		$files = glob($path);
+		$maxSelectorCount = 4095;
+
+		foreach ($files as $file) {
+			$content = file_get_contents($file);
+
+			$content = preg_replace('/url\(.+?\)/i', 'url(...)', $content);
+			$content = preg_replace('/\/\*.*?\*\//s', '', $content);
+			$content = preg_replace('/\/\/.*/', '', $content);
+			$content = preg_replace('/@(media|font-face).*?\{/', '', $content);
+
+			preg_match_all('/([^{};]+)\{/s', $content, $matches);
+
+			$selectorCount = array_reduce($matches[1], function($count, $selectors) {
+				return $count + substr_count($selectors, ',') + 1;
+			}, 0);
+
+			$this->assertTrue($selectorCount <= $maxSelectorCount, 'The CSS file "'. $file .'" has '. $selectorCount .' selectors. Having more than '. $maxSelectorCount .' selectors will causes problem on IE9.');
+		}
+	}
+
 	public function testOpenSearchDescription()
 	{
 		// <link rel="search" type="application/opensearchdescription+xml" href="/opensearch.xml" title="Website">
