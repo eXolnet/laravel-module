@@ -4,6 +4,12 @@ This project follows [Semantic Versioning 2.0.0](http://semver.org/).
 
 ## <a name="unreleased"></a>Unreleased
 
+## <a name="v2.0.0"></a>[v2.0.0](https://github.com/exolnet/laravel-module/tree/v2.0.0) (2016-02-03)
+[Full Changelog](https://github.com/exolnet/laravel-module/compare/v1.2.0...v2.0.0)
+
+### Added
+* Support for Laravel 5
+
 ## <a name="v1.2.0"></a>[v1.2.0](https://github.com/exolnet/laravel-module/tree/v1.2.0) (2016-02-03)
 [Full Changelog](https://github.com/exolnet/laravel-module/compare/v1.1.0...v1.2.0)
 
