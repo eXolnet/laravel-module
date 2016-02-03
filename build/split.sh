@@ -2,6 +2,7 @@
 
 git subsplit init git@github.com:exolnet/laravelmodule.git
 git subsplit publish --heads="master 4.2 5.1" $FLAGS src/Exolnet/Cache:git@github.com:exolnet/laravel-cache.git
+git subsplit publish --heads="master 4.2 5.1" $FLAGS src/Exolnet/Console:git@github.com:exolnet/laravel-console.git
 git subsplit publish --heads="master 4.2 5.1" $FLAGS src/Exolnet/Core:git@github.com:exolnet/laravel-core.git
 git subsplit publish --heads="master 4.2 5.1" $FLAGS src/Exolnet/Database:git@github.com:exolnet/laravel-database.git
 git subsplit publish --heads="master 4.2 5.1" $FLAGS src/Exolnet/Extension:git@github.com:exolnet/laravel-extension.git
