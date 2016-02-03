@@ -1,6 +1,6 @@
 <?php namespace Exolnet\Html;
 
-use Illuminate\Html\HtmlBuilder as LaravelHtmlBuilder;
+use Collective\Html\HtmlBuilder as LaravelHtmlBuilder;
 
 class HtmlHelper
 {
