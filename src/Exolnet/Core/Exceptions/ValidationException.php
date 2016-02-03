@@ -6,8 +6,8 @@ use Illuminate\Support\Contracts\JsonableInterface;
 use Illuminate\Validation\Validator;
 use JsonSerializable;
 
-class ValidationException extends Exception
-	implements ArrayableInterface, JsonableInterface, JsonSerializable {
+class ValidationException extends Exception implements Arrayable, Jsonable, JsonSerializable
+{
 	/**
 	 * The errors list
 	 *
@@ -22,10 +22,9 @@ class ValidationException extends Exception
 	/**
 	 * Constructor
 	 *
-	 * @param array     $errors
-	 * @param string    $message
-	 * @param integer   $code
-	 * @param exception $previous
+	 * @param array|string $message
+	 * @param integer      $code
+	 * @param exception    $previous
 	 */
 	public function __construct($message = null, $code = 0, Exception $previous = null)
 	{

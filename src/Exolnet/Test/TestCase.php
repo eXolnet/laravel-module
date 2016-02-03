@@ -76,13 +76,15 @@ class TestCase extends \Illuminate\Foundation\Testing\TestCase {
 	 */
 	public function tearDown()
 	{
-		DB::disconnect();
-		m::close();
+		if ( ! self::$migrationFailed) {
+			DB::disconnect();
+			m::close();
 
-		$this->tearDownModels();
+			$this->tearDownModels();
 
-		$this->app->reset();
-		$this->app = null;
+			$this->app->reset();
+			$this->app = null;
+		}
 
 		parent::tearDown();
 	}

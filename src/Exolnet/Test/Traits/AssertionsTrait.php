@@ -146,4 +146,26 @@ trait AssertionsTrait {
 	{
 		$this->assertEquals($expected, $actual, $message, $delta, $depth, true);
 	}
+
+	/**
+	 * @param string $selector
+	 * @return $this
+	 */
+	public function seeSelector($selector)
+	{
+		$elements = $this->crawler->filter($selector);
+
+		$this->assertTrue(count($elements) > 0);
+
+		return $this;
+	}
+
+	/**
+	 * @param $kind
+	 * @return \Exolnet\Test\Traits\AssertionsTrait
+	 */
+	public function seeAlert($kind)
+	{
+		return $this->seeSelector('.alert.alert-'. $kind);
+	}
 }

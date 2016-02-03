@@ -1,6 +1,8 @@
 <?php namespace Exolnet\Test;
 
 use BadMethodCallException;
+use Illuminate\View\View;
+use PHPUnit_Framework_Assert as PHPUnit;
 
 class TestCaseFunctional extends \TestCase {
 	public function __call($method, $args)
@@ -24,9 +26,41 @@ class TestCaseFunctional extends \TestCase {
 	protected function displayErrors()
 	{
 		$errors = $this->app['session.store']->get('notice_error');
+		$errors = $errors ?: $this->app['session.store']->get('errors');
 		if ($errors) {
 			$this->assertSame([], $errors, 'There were errors...');
 		}
 	}
 
+	public function assertViewResponse($viewName = null)
+	{
+		if (! isset($this->response->original) || ! $this->response->original instanceof View) {
+			return PHPUnit::assertTrue(false, 'The response was not a view.');
+		}
+
+		if ($viewName !== null) {
+			PHPUnit::assertEquals($viewName, $this->response->original->name(), 'Failed asserting the view responded.');
+		}
+	}
+
+	public function assertSessionDoesntHave($key)
+	{
+		if (is_array($key)) {
+			return $this->assertSessionDoesntHaveAll($key);
+		}
+
+		PHPUnit::assertFalse($this->app['session.store']->has($key), "Session contains key: $key");
+	}
+
+	public function assertSessionDoesntHaveAll($keys)
+	{
+		return ! $this->assertSessionHasAll($keys);
+	}
+
+	public function setPreviousUrl($url)
+	{
+		$this->app['session.store']->setPreviousUrl($url);
+
+		return $this;
+	}
 }

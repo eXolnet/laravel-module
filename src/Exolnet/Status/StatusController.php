@@ -1,11 +1,11 @@
 <?php namespace Exolnet\Status;
 
-use Controller;
 use Illuminate\Filesystem\Filesystem;
+use Illuminate\Routing\Controller as BaseController;
 use Response;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
-class StatusController extends Controller
+class StatusController extends BaseController
 {
 	/**
 	 * @var \Illuminate\Filesystem\Filesystem
@@ -32,7 +32,7 @@ class StatusController extends Controller
 
 	/**
 	 * @return \Response
-	 * @throws \Illuminate\Filesystem\FileNotFoundException
+	 * @throws \Symfony\Component\HttpKernel\Exception\NotFoundHttpException
 	 */
 	public function sha()
 	{
