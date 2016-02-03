@@ -50,7 +50,6 @@ class TestCaseFunctional extends \TestCase {
 		}
 
 		PHPUnit::assertFalse($this->app['session.store']->has($key), "Session contains key: $key");
-
 	}
 
 	public function assertSessionDoesntHaveAll($keys)
