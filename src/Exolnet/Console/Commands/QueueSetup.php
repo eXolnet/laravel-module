@@ -81,6 +81,17 @@ class QueueSetup extends Command {
 	}
 
 	/**
+	 * @param string $path
+	 * @return string
+	 */
+	private function getBasePath($path = '')
+	{
+		$basePath = rtrim(env('QUEUE_DIRECTORY', base_path()), '/');
+
+		return $basePath . ($path ? DIRECTORY_SEPARATOR.$path : $path);
+	}
+
+	/**
 	 * @return void
 	 */
 	private function checkDependencies()
@@ -140,15 +151,15 @@ class QueueSetup extends Command {
 		$environment  = env('APP_ENV');
 
 		$name         = $identifier .'.'. $environment .'.queue';
-		$directory    = base_path();
+		$directory    = $this->getBasePath();
 		$processCount = env('QUEUE_PROCESS_COUNT', 1);
 		$user         = env('QUEUE_USER');
 		$autoStart    = env('QUEUE_AUTO_START', true) ? 'true' : 'false';
 		$autoRestart  = env('QUEUE_AUTO_RESSTART', true) ? 'true' : 'false';
 		$stopAsGroup  = env('QUEUE_STOP_AS_GROUP', true) ? 'true' : 'false';
 		$killAsGroup  = env('QUEUE_KILL_AS_GROUP', true) ? 'true' : 'false';
-		$stderr       = storage_path('logs/queue.err.log');
-		$stdout       = storage_path('logs/queue.out.log');
+		$stderr       = $this->getBasePath('storage/logs/queue.err.log');
+		$stdout       = $this->getBasePath('storage/logs/queue.out.log');
 
 		$commandPhp   = env('QUEUE_COMMAND_PHP', 'php');
 		$timeout      = env('QUEUE_TIMEOUT', 0);
