@@ -84,6 +84,45 @@ trait Translatable {
 	}
 
 	/**
+	 * @return \Illuminate\Database\Eloquent\Collection
+	 */
+	public function getTranslations()
+	{
+		return $this->translations;
+	}
+
+	/**
+	 * @param string $key
+	 * @param array $values
+	 * @return $this
+	 */
+	public function setAttributeTranslations($key, array $values)
+	{
+		foreach ($values as $locale => $value) {
+			$this->translateOrNew($locale)->setAttribute($key, $value);
+		}
+
+		return $this;
+	}
+
+	/**
+	 * @param array $attributes
+	 * @return $this
+	 */
+	public function fillWithTranslations(array $attributes)
+	{
+		foreach ($attributes as $key => $value) {
+			if ($this->isTranslationAttribute($key)) {
+				$this->setAttributeTranslations($key, $value);
+			} else {
+				$this->setAttribute($key, $value);
+			}
+		}
+
+		return $this;
+	}
+
+	/**
 	 * @return array
 	 */
 	public function translationsToArray()
