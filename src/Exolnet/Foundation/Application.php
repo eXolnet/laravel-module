@@ -1,6 +1,8 @@
 <?php namespace Exolnet\Foundation;
 
+use Exolnet\Routing\RoutingServiceProvider;
 use Illuminate\Foundation\Application as LaravelApplication;
+use Illuminate\Events\EventServiceProvider;
 
 class Application extends LaravelApplication
 {
@@ -52,5 +54,17 @@ class Application extends LaravelApplication
 				}
 			}
 		}
+	}
+
+	/**
+	 * Register all of the base service providers.
+	 *
+	 * @return void
+	 */
+	protected function registerBaseServiceProviders()
+	{
+		$this->register(new EventServiceProvider($this));
+
+		$this->register(new RoutingServiceProvider($this));
 	}
 }
