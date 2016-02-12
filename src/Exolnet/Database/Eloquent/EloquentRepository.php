@@ -46,11 +46,22 @@ class EloquentRepository implements Repository
 	/**
 	 * @param mixed $id
 	 * @param array $columns
-	 * @return \Illuminate\Database\Eloquent\Collection|\Illuminate\Database\Eloquent\Model|null
+	 * @return \Illuminate\Database\Eloquent\Model|null
 	 */
 	public function find($id, array $columns = ['*'])
 	{
 		return $this->newQuery()->find($id, $columns);
+	}
+
+	/**
+	 * @param string $attribute
+	 * @param mixed $value
+	 * @param array $columns
+	 * @return \Illuminate\Database\Eloquent\Model|null
+	 */
+	public function findBy($attribute, $value, array $columns = ['*'])
+	{
+		return $this->newQuery()->where($attribute, '=', $value)->first($columns);
 	}
 
 	/**
