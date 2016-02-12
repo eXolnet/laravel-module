@@ -2,7 +2,8 @@
 
 use App;
 use Closure;
-use Illuminate\Http\Request;
+use Illuminate\Container\Container;
+use Illuminate\Contracts\Events\Dispatcher;
 use Illuminate\Routing\Route as LaravelRoute;
 use Illuminate\Routing\Router as LaravelRouter;
 use Mockery\Exception\RuntimeException;
@@ -16,40 +17,27 @@ class Router extends LaravelRouter
 	protected $localeStack = [];
 
 	/**
-	 * @var array
+	 * @var \Exolnet\Routing\LocaleService
 	 */
-	protected $supportedLocales = [];
+	protected $localeService;
 
 	/**
-	 * @var string
+	 * Create a new Router instance.
+	 *
+	 * @param  \Illuminate\Contracts\Events\Dispatcher  $events
+	 * @param  \Illuminate\Container\Container  $container
 	 */
-	protected $baseLocale;
-
-	//==========================================================================
-
-	/**
-	 * @param \Closure $callback
-	 * @param array|null $locales
-	 * @param bool $avoidPrefixOnBaseLocale
-	 */
-	public function groupLocales(Closure $callback, array $locales = null, $avoidPrefixOnBaseLocale = false)
+	public function __construct(Dispatcher $events, Container $container = null)
 	{
-		if ($locales === null) {
-			$locales = $this->getSupportedLocales();
-		}
+		parent::__construct($events, $container);
 
-		foreach ($locales as $locale) {
-			array_push($this->localeStack, $locale);
-
-			$prefix = ! $avoidPrefixOnBaseLocale || $this->baseLocale !== $locale ? $locale : '';
-
-			$this->group(['prefix' => $prefix], $callback);
-
-			array_pop($this->localeStack);
-		}
+		$this->localeService = $this->container->make(LocaleService::class);
 	}
 
-	public function getLastLocale()
+	/**
+	 * @return string|null
+	 */
+	protected function getLastLocale()
 	{
 		if (count($this->localeStack) === 0) {
 			return null;
@@ -59,7 +47,51 @@ class Router extends LaravelRouter
 	}
 
 	/**
-	 * @docInherit
+	 * @return array
+	 */
+	public function getLocales()
+	{
+		return $this->localeService->getSupportedLocales();
+	}
+
+	/**
+	 * @return array
+	 */
+	public function getAlternateLocales()
+	{
+		return array_filter($this->getLocales(), function($locale) {
+			return App::getLocale() !== $locale;
+		});
+	}
+
+	/**
+	 * @param \Closure $callback
+	 * @param array|null $locales
+	 * @param bool $avoidPrefixOnBaseLocale
+	 */
+	public function groupLocales(Closure $callback, array $locales = null, $avoidPrefixOnBaseLocale = false)
+	{
+		if ($locales === null) {
+			$locales = $this->localeService->getSupportedLocales();
+		}
+
+		foreach ($locales as $locale) {
+			array_push($this->localeStack, $locale);
+
+			$shouldPrefixLocale = ! $avoidPrefixOnBaseLocale || $this->localeService->getBaseLocale() !== $locale;
+			$prefix = $shouldPrefixLocale ? $locale : '';
+
+			$this->group(['prefix' => $prefix], $callback);
+
+			array_pop($this->localeStack);
+		}
+	}
+
+	/**
+	 * @param array|string $methods
+	 * @param string       $uri
+	 * @param string       $action
+	 * @return \Exolnet\Routing\Route|\Illuminate\Routing\Route
 	 */
 	protected function newRoute($methods, $uri, $action)
 	{
@@ -69,137 +101,31 @@ class Router extends LaravelRouter
 
 		$locale = end($this->localeStack);
 
+		// Since we use the "prefix", Laravel will automatically append it to auto generated
+		// resources names. Thus, we may obtain routes named like this "admin.en.page.en" or
+		// "en.page.en" (the local is in double). To avoid this, we replace all locales that are
+		// not at the end.
+		if (array_key_exists('as', $action)) {
+			$action['as'] = preg_replace('/(^|\.)'. $locale .'\./', '\1', $action['as']);
+		}
+
 		return new Route($methods, $uri, $action, $locale);
 	}
 
-	/**
-	 * @docInherit
-	 */
-	protected function getGroupResourceName($prefix, $resource, $method)
-	{
-		$prefix = parent::getGroupResourceName($prefix, $resource, $method);
-		$locale = $this->getLastLocale();
-
-		if ($locale === null) {
-			return $prefix;
-		}
-
-		return str_replace($locale . '.', '', $prefix);
-	}
-
 	//==========================================================================
 
 	/**
-	 * @docInherit
+	 * @return array
 	 */
-	public function dispatch(Request $request)
-	{
-		// Set locale
-		$initialLocale = App::getLocale();
-		$locale = $this->extractLocale($request);
-
-		App::setLocale($locale);
-		setlocale(LC_COLLATE, $locale . '_CA.utf8');
-		setlocale(LC_CTYPE, $locale . '_CA.utf8');
-		setlocale(LC_TIME, $locale . '_CA.utf8');
-
-		$this->storeLocale($locale);
-
-		// Dispatch request
-		$response = parent::dispatch($request);
-
-		// Reset the locale
-		App::setLocale($initialLocale);
-
-		return $response;
-	}
-
-	//==========================================================================
-
-	public function setSupportedLocales(array $locales)
-	{
-		$this->supportedLocales = $locales;
-	}
-
-	public function getSupportedLocales()
-	{
-		return $this->supportedLocales;
-	}
-
-	public function isSupportedLocale($locale)
-	{
-		return in_array($locale, $this->supportedLocales);
-	}
-
-	public function getBaseLocale()
-	{
-		return $this->baseLocale ?: reset($this->supportedLocales);
-	}
-
-	public function setBaseLocale($locale)
-	{
-		if ( ! $this->isSupportedLocale($locale)) {
-			throw new \InvalidArgumentException('The locale ' . $locale . ' is not supported');
-		}
-
-		$this->baseLocale = $locale;
-	}
-
-	protected function extractLocale(Request $request)
-	{
-		// 1. Try to extract the locale by with the first URI segment
-		$locale = $request->segment(1);
-
-		if ($this->isSupportedLocale($locale)) {
-			return $locale;
-		}
-
-		// Default locale
-		return $this->getBaseLocale();
-	}
-
-	protected function storeLocale($locale)
-	{
-		# code...
-	}
-
-	//==========================================================================
-
 	public function currentAlternates()
 	{
 		$route = $this->current();
 
-		if ($route === null) {
-			return [];
-		}
-
-		return $this->alternates($route);
-	}
-
-	public function alternates(LaravelRoute $route)
-	{
 		if ( ! $route instanceof Route) {
 			return [];
 		}
 
-		$alternates = [];
-		$parameters = $route->parameters();
-
-		foreach ($this->routes as $alternate) {
-			if ($route->isAlternate($alternate)) {
-				$alternates[] = $alternate;
-			}
-		}
-
-		return $alternates;
-	}
-
-	protected function getResourceAction($resource, $controller, $method, $options)
-	{
-		$name = $this->getResourceName($resource, $method, $options);
-		$options = array_except($options, ['as', 'uses']);
-
-		return ['as' => $name, 'uses' => $controller.'@'.$method] + $options;
+		return $route->alternates();
 	}
 
 	//==========================================================================

@@ -1,23 +1,26 @@
 <?php namespace Exolnet\Routing;
 
-class RoutingServiceProvider extends \Illuminate\Routing\RoutingServiceProvider
+use Illuminate\Routing\RoutingServiceProvider as ServiceProvider;
+
+class RoutingServiceProvider extends ServiceProvider
 {
+	/**
+	 * Register the router instance.
+	 *
+	 * @return void
+	 */
 	protected function registerRouter()
 	{
 		$this->app['router'] = $this->app->share(function ($app) {
-			$router = new Router($app['events'], $app);
-
-			// If the current application environment is "testing", we will disable the
-			// routing filters, since they can be tested independently of the routes
-			// and just get in the way of our typical controller testing concerns.
-			if ($app['env'] == 'testing') {
-				$router->disableFilters();
-			}
-
-			return $router;
+			return new Router($app['events'], $app);
 		});
 	}
 
+	/**
+	 * Register the URL generator service.
+	 *
+	 * @return void
+	 */
 	protected function registerUrlGenerator()
 	{
 		$this->app['url'] = $this->app->share(function ($app) {

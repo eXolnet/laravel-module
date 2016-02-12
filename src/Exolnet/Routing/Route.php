@@ -2,6 +2,7 @@
 
 use Illuminate\Routing\Route as LaravelRoute;
 use Lang;
+use URL;
 
 class Route extends LaravelRoute
 {
@@ -10,9 +11,10 @@ class Route extends LaravelRoute
 	 */
 	protected $locale;
 
+	/**
+	 * @var string
+	 */
 	protected $baseUri;
-
-	protected static $alternateValidators;
 
 	/**
 	 * Create a new Route instance.
@@ -25,7 +27,7 @@ class Route extends LaravelRoute
 	public function __construct($methods, $uri, $action, $locale)
 	{
 		$this->locale = $locale;
-		$this->baseUri = preg_replace('/\b' . $locale . '\b/', '%LOCALE%', $uri);
+		$this->baseUri = preg_replace('/\b'. $locale .'(\/|\b)/', '%LOCALE%', $uri);
 		$uri = static::translateUri($uri, $locale);
 
 		if (array_key_exists('as', $action)) {
@@ -35,22 +37,36 @@ class Route extends LaravelRoute
 		parent::__construct($methods, $uri, $action);
 	}
 
+	/**
+	 * @return string
+	 */
 	public function getLocale()
 	{
 		return $this->locale;
 	}
 
+	/**
+	 * @param string $locale
+	 * @return $this
+	 */
 	public function setLocale($locale)
 	{
 		$this->locale = $locale;
 		return $this;
 	}
 
+	/**
+	 * @return string
+	 */
 	public function getBaseUri()
 	{
 		return $this->baseUri;
 	}
 
+	/**
+	 * @param string $baseUri
+	 * @return $this
+	 */
 	public function setBaseUri($baseUri)
 	{
 		$this->baseUri = $baseUri;
@@ -58,6 +74,9 @@ class Route extends LaravelRoute
 		return $this;
 	}
 
+	/**
+	 * @param array $parameters
+	 */
 	public function setParameters(array $parameters)
 	{
 		foreach ($parameters as $key => $value) {
@@ -65,6 +84,11 @@ class Route extends LaravelRoute
 		}
 	}
 
+	/**
+	 * @param string $uri
+	 * @param string $locale
+	 * @return string
+	 */
 	protected static function translateUri($uri, $locale)
 	{
 		$parts = explode('/', $uri);
@@ -82,6 +106,18 @@ class Route extends LaravelRoute
 
 	//==========================================================================
 
+	/**
+	 * @return array
+	 */
+	public function alternates()
+	{
+		return URL::alternateRoutes($this);
+	}
+
+	/**
+	 * @param \Illuminate\Routing\Route $route
+	 * @return bool
+	 */
 	public function isAlternate(LaravelRoute $route)
 	{
 		if ( ! $route instanceof Route) {
