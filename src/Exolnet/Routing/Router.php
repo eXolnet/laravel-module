@@ -1,5 +1,6 @@
 <?php namespace Exolnet\Routing;
 
+use App;
 use Closure;
 use Illuminate\Container\Container;
 use Illuminate\Contracts\Events\Dispatcher;
@@ -25,13 +26,42 @@ class Router extends LaravelRouter
 	 *
 	 * @param  \Illuminate\Contracts\Events\Dispatcher  $events
 	 * @param  \Illuminate\Container\Container  $container
-	 * @return void
 	 */
 	public function __construct(Dispatcher $events, Container $container = null)
 	{
 		parent::__construct($events, $container);
 
 		$this->localeService = $this->container->make(LocaleService::class);
+	}
+
+	/**
+	 * @return string|null
+	 */
+	protected function getLastLocale()
+	{
+		if (count($this->localeStack) === 0) {
+			return null;
+		}
+
+		return end($this->localeStack);
+	}
+
+	/**
+	 * @return array
+	 */
+	public function getLocales()
+	{
+		return $this->localeService->getSupportedLocales();
+	}
+
+	/**
+	 * @return array
+	 */
+	public function getAlternateLocales()
+	{
+		return array_filter($this->getLocales(), function($locale) {
+			return App::getLocale() !== $locale;
+		});
 	}
 
 	/**
@@ -48,24 +78,13 @@ class Router extends LaravelRouter
 		foreach ($locales as $locale) {
 			array_push($this->localeStack, $locale);
 
-			$prefix = ! $avoidPrefixOnBaseLocale || $this->localeService->getBaseLocale() !== $locale ? $locale : '';
+			$shouldPrefixLocale = ! $avoidPrefixOnBaseLocale || $this->localeService->getBaseLocale() !== $locale;
+			$prefix = $shouldPrefixLocale ? $locale : '';
 
 			$this->group(['prefix' => $prefix], $callback);
 
 			array_pop($this->localeStack);
 		}
-	}
-
-	/**
-	 * @return string|null
-	 */
-	public function getLastLocale()
-	{
-		if (count($this->localeStack) === 0) {
-			return null;
-		}
-
-		return end($this->localeStack);
 	}
 
 	/**
@@ -102,33 +121,11 @@ class Router extends LaravelRouter
 	{
 		$route = $this->current();
 
-		if ($route === null) {
-			return [];
-		}
-
-		return $this->alternates($route);
-	}
-
-	/**
-	 * @param \Illuminate\Routing\Route $route
-	 * @return array
-	 */
-	public function alternates(LaravelRoute $route)
-	{
 		if ( ! $route instanceof Route) {
 			return [];
 		}
 
-		$alternates = [];
-		$parameters = $route->parameters();
-
-		foreach ($this->routes as $alternate) {
-			if ($route->isAlternate($alternate)) {
-				$alternates[] = $alternate;
-			}
-		}
-
-		return $alternates;
+		return $route->alternates();
 	}
 
 	//==========================================================================

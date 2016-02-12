@@ -2,6 +2,7 @@
 
 use Illuminate\Routing\Route as LaravelRoute;
 use Lang;
+use URL;
 
 class Route extends LaravelRoute
 {
@@ -26,7 +27,7 @@ class Route extends LaravelRoute
 	public function __construct($methods, $uri, $action, $locale)
 	{
 		$this->locale = $locale;
-		$this->baseUri = preg_replace('/\b' . $locale . '\b/', '%LOCALE%', $uri);
+		$this->baseUri = preg_replace('/\b'. $locale .'(\/|\b)/', '%LOCALE%', $uri);
 		$uri = static::translateUri($uri, $locale);
 
 		if (array_key_exists('as', $action)) {
@@ -104,6 +105,14 @@ class Route extends LaravelRoute
 	}
 
 	//==========================================================================
+
+	/**
+	 * @return array
+	 */
+	public function alternates()
+	{
+		return URL::alternateRoutes($this);
+	}
 
 	/**
 	 * @param \Illuminate\Routing\Route $route
