@@ -4,6 +4,8 @@ use Exolnet\Scaffolding\Services\CrudService;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
+use Yajra\Datatables\Datatables;
+use Yajra\Datatables\Engines\BaseEngine;
 
 class CrudController extends Controller
 {
@@ -35,6 +37,7 @@ class CrudController extends Controller
 		'add_item' => 'Add :singular_name',
 		'new_item' => 'New :singular_name',
 		'search_items' => 'Search :name',
+		'filter_items' => 'Filter :name',
 		'not_found' => 'No item to display.',
 		'notice_created' => 'The :sungular_name was successfully created.',
 		'notice_updated' => 'The :sungular_name was successfully updated.',
@@ -92,14 +95,45 @@ class CrudController extends Controller
 	 *
 	 * @return \Illuminate\Http\Response
 	 */
-	public function index()
+	public function index(Request $request)
 	{
+		if ($request->get('draw')) {
+			return $this->indexHandleDataTable();
+		}
+
 		$labels = $this->getLabels();
 
 		return view($this->baseViewPath .'.index', [
 			'labels' => $labels,
 			'title'  => $labels['name'],
 		]);
+	}
+
+	/**
+	 * @return \Illuminate\Http\JsonResponse
+	 */
+	public function indexHandleDataTable()
+	{
+		$users = $this->crudService->getBaseDataTableData();
+
+		/** @var \Yajra\Datatables\Engines\BaseEngine $dataTable */
+		$dataTable = Datatables::of($users);
+
+		$dataTable->addColumn('actions', function($item) {
+			return 'Actions';
+		});
+
+		$this->transformDataTable($dataTable);
+
+		return $dataTable->make(true);
+	}
+
+	/**
+	 * @param \Yajra\Datatables\Engines\BaseEngine $dataTable
+	 */
+	protected function transformDataTable(BaseEngine $dataTable)
+	{
+		// Default behaviour - do nothing
 	}
 
 	/**

@@ -3,6 +3,7 @@
 use App;
 use Closure;
 use Dimsav\Translatable\Translatable as DimsavTranslatable;
+use Illuminate\Database\Eloquent\Builder;
 use stdClass;
 
 trait Translatable {
@@ -59,6 +60,20 @@ trait Translatable {
 	public function scopeWhereTranslation($query, $key, $op, $value, $locale = null)
 	{
 		return $this->scopeHasTranslation($query, $key, $value, $locale, $op);
+	}
+
+	public function scopeJoinTranslation(Builder $query, $locale = null)
+	{
+		$translationTable = $this->getTranslationsTable();
+		$localeKey        = $this->getLocaleKey();
+
+		if ($locale === null) {
+			$locale = App::getLocale();
+		}
+
+		return $query
+			->leftJoin($translationTable, $translationTable.'.'.$this->getRelationKey(), '=', $this->getTable().'.'.$this->getKeyName())
+			->where($translationTable.'.'.$localeKey, $locale);
 	}
 
 	/**
