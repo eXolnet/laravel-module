@@ -55,6 +55,14 @@ class Router extends LaravelRouter
 	}
 
 	/**
+	 * @return string
+	 */
+	public function getBaseLocale()
+	{
+		return $this->localeService->getBaseLocale();
+	}
+
+	/**
 	 * @return array
 	 */
 	public function getAlternateLocales()
@@ -72,13 +80,13 @@ class Router extends LaravelRouter
 	public function groupLocales(Closure $callback, array $locales = null, $avoidPrefixOnBaseLocale = false)
 	{
 		if ($locales === null) {
-			$locales = $this->localeService->getSupportedLocales();
+			$locales = $this->getLocales();
 		}
 
 		foreach ($locales as $locale) {
 			array_push($this->localeStack, $locale);
 
-			$shouldPrefixLocale = ! $avoidPrefixOnBaseLocale || $this->localeService->getBaseLocale() !== $locale;
+			$shouldPrefixLocale = ! $avoidPrefixOnBaseLocale || $this->getBaseLocale() !== $locale;
 			$prefix = $shouldPrefixLocale ? $locale : '';
 
 			$this->group(['prefix' => $prefix], $callback);
@@ -109,7 +117,7 @@ class Router extends LaravelRouter
 			$action['as'] = preg_replace('/(^|\.)'. $locale .'\./', '\1', $action['as']);
 		}
 
-		return new Route($methods, $uri, $action, $locale);
+		return (new Route($methods, $uri, $action, $locale))->setContainer($this->container);
 	}
 
 	//==========================================================================
