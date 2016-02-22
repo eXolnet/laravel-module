@@ -27,7 +27,7 @@ class CrudController extends Controller
 	/**
 	 * @var array
 	 */
-	protected $baseLabels = [
+	private $baseLabels = [
 		'name' => 'Items',
 		'singular_name' => 'Item',
 		'all_items' => 'All :name',
@@ -120,7 +120,12 @@ class CrudController extends Controller
 		$dataTable = Datatables::of($users);
 
 		$dataTable->addColumn('actions', function($item) {
-			return 'Actions';
+			$actions = [
+				'edit'   => '<a href="#"><i class="fa fa-pencil"></i></a>',
+				'delete' => '<a href="#"><i class="fa fa-trash"></i></a>',
+			];
+
+			return implode(' &nbsp; ', $actions);
 		});
 
 		$this->transformDataTable($dataTable);
