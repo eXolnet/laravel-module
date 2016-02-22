@@ -4,6 +4,7 @@ use App;
 use Closure;
 use Dimsav\Translatable\Translatable as DimsavTranslatable;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Model;
 use stdClass;
 
 trait Translatable {
@@ -87,7 +88,7 @@ trait Translatable {
 		}
 
 		return $this->hasOne($this->getTranslationModelName(), $this->getRelationKey())
-			->where('locale', '=', $locale);
+			->where($this->getLocaleKey(), '=', $locale);
 	}
 
 	/**
@@ -167,5 +168,35 @@ trait Translatable {
 		}
 
 		return $translations;
+	}
+
+	/**
+	 * This function allows to build additional parameters to be used in dynamic URL.
+	 *
+	 * For example, if your route is "/products/{taxonomyType}", you might use the following
+	 * function to obtain the alternate parameters:
+	 *
+	 * $taxonomy->buildAlternateParameters(function(TaxonomyTranslation $translation) {
+	 *		return ['taxonomyType' => $translation->getSlug()];
+	 * });
+	 *
+	 * @param callable $callback
+	 * @return array
+	 */
+	public function buildAlternateParameters(callable $callback)
+	{
+		$localeKey = $this->getLocaleKey();
+
+		return $this->getTranslations()
+			->map(function (Model $translation) use ($callback, $localeKey) {
+				/** @var array $parameters */
+				$parameters = call_user_func($callback, $translation);
+
+				return $parameters + [
+					'locale'  => $translation->getAttribute($localeKey),
+				];
+			})
+			->keyBy('locale')
+			->toArray();
 	}
 }

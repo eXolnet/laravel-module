@@ -2,6 +2,7 @@
 
 use App;
 use Config;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Routing\UrlGenerator as LaravelUrlGenerator;
 
 class UrlGenerator extends LaravelUrlGenerator
@@ -80,7 +81,7 @@ class UrlGenerator extends LaravelUrlGenerator
 	 * @param array $alternateParameters
 	 * @return array
 	 */
-	function alternates(array $alternateParameters = array(), $absolute = true)
+	public function alternates(array $alternateParameters = array(), $absolute = true)
 	{
 		$currentRoute = $this->request->route();
 
@@ -111,6 +112,16 @@ class UrlGenerator extends LaravelUrlGenerator
 		}
 
 		return $alternates;
+	}
+
+	/**
+	 * @param \Illuminate\Database\Eloquent\Model $translatableModel
+	 * @param callable                            $callback
+	 * @return mixed
+	 */
+	public function buildAlternateParameters(Model $translatableModel, callable $callback)
+	{
+		return $translatableModel->buildAlternateParameters($callback);
 	}
 
 	/**
