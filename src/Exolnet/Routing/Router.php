@@ -4,9 +4,9 @@ use App;
 use Closure;
 use Illuminate\Container\Container;
 use Illuminate\Contracts\Events\Dispatcher;
-use Illuminate\Routing\Route as LaravelRoute;
 use Illuminate\Routing\Router as LaravelRouter;
 use Mockery\Exception\RuntimeException;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Redirect;
 
 class Router extends LaravelRouter
@@ -156,5 +156,56 @@ class Router extends LaravelRouter
 				return Redirect::route($route->getName());
 			});
 		}
+	}
+
+	/**
+	 * @param $key
+	 * @param \Closure $query
+	 * @param \Closure|null $callback
+	 */
+	public function bindQuery($key, Closure $query, Closure $callback = null)
+	{
+		$this->bind($key, function ($value) use ($query, $callback) {
+			if (is_null($value)) {
+				return;
+			}
+
+			if ($model = call_user_func($query, $value)) {
+				return $model;
+			}
+
+			// If a callback was supplied to the method we will call that to determine
+			// what we should do when the model is not found. This just gives these
+			// developer a little greater flexibility to decide what will happen.
+			if ($callback instanceof Closure) {
+				return call_user_func($callback, $value);
+			}
+
+			throw new NotFoundHttpException;
+		});
+	}
+
+	/**
+	 * @param string $key
+	 * @param string $class
+	 * @param \Closure|null $callback
+	 */
+	public function bindSlugable($key, $class, Closure $callback = null)
+	{
+		$this->bindQuery($key, function($value) use ($class) {
+			// For model binders, we will attempt to retrieve the models using the first
+			// method on the model instance. If we cannot retrieve the models we'll
+			// throw a not found exception otherwise we will return the instance.
+			$instance = $this->container->make($class);
+
+			/** @var \Exolnet\Routing\Slugable $model */
+			$model    = $instance->where($instance->getRouteKeyName(), $value)->first();
+
+			if ($model && $model->getSlug() === $value) {
+				return $model;
+			}
+
+			return null;
+		}, $callback);
 	}
 }
