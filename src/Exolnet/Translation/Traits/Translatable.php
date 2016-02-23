@@ -33,36 +33,58 @@ trait Translatable {
 	}
 
 	/**
-	 * @param string  $query
-	 * @param  string $key
-	 * @param    string     $value
-	 * @param string|null    $locale
-	 * @param string  $op
-	 * @return mixed
+	 * @param \Illuminate\Database\Eloquent\Builder $query
+	 * @param \Closure $callback
+	 * @param string|null $locale
+	 * @param string $operator
+	 * @param int $count
+	 * @return \Illuminate\Database\Eloquent\Builder
 	 */
-	public function scopeHasTranslation($query, $key, $value, $locale = null, $op = '=')
+	public function scopeWhereHasTranslation(Builder $query, Closure $callback, $locale = null, $operator = '>=', $count = 1)
 	{
 		$locale = $locale ?: App::getLocale();
 
-		return $query->whereHas('translations', function ($q) use ($key, $value, $locale, $op) {
-			$q->where('locale', '=', $locale)
-				->where($key, $op, $value);
-		});
+		return $query->whereHas('translations', function (Builder $query) use ($locale, $callback) {
+			$query->where('locale', '=', $locale);
+			call_user_func($callback, $query);
+
+			return $query;
+		}, $operator, $count);
 	}
 
 	/**
-	 * @param  string    $query
-	 * @param  string    $key
-	 * @param  string    $op
-	 * @param  string    $value
+	 * @param \Illuminate\Database\Eloquent\Builder $query
+	 * @param string $key
+	 * @param mixed $value
 	 * @param string|null $locale
-	 * @return mixed
+	 * @param string $op
+	 * @return \Illuminate\Database\Eloquent\Builder
 	 */
-	public function scopeWhereTranslation($query, $key, $op, $value, $locale = null)
+	public function scopeHasTranslation(Builder $query, $key, $value, $locale = null, $op = '=')
+	{
+		return $this->scopeWhereHasTranslation($query, function(Builder $query) use ($key, $value, $op) {
+			return $query->where($key, $op, $value);
+		}, $locale);
+	}
+
+	/**
+	 * @param \Illuminate\Database\Eloquent\Builder $query
+	 * @param string $key
+	 * @param string $op
+	 * @param mixed $value
+	 * @param string|null $locale
+	 * @return \Illuminate\Database\Eloquent\Builder
+	 */
+	public function scopeWhereTranslation(Builder $query, $key, $op, $value, $locale = null)
 	{
 		return $this->scopeHasTranslation($query, $key, $value, $locale, $op);
 	}
 
+	/**
+	 * @param \Illuminate\Database\Eloquent\Builder $query
+	 * @param string|null $locale
+	 * @return \Illuminate\Database\Eloquent\Builder
+	 */
 	public function scopeJoinTranslation(Builder $query, $locale = null)
 	{
 		$translationTable = $this->getTranslationsTable();
@@ -105,6 +127,29 @@ trait Translatable {
 	public function getTranslations()
 	{
 		return $this->translations;
+	}
+
+	/**
+	 * @param string $key
+	 * @return mixed
+	 */
+	private function getTranslationByLocaleKey($key)
+	{
+		if (isset($this->relations['translation']) && ! isset($this->relations['translations'])) {
+			$translation = $this->translation;
+
+			if ($translation->getAttribute($this->getLocaleKey()) === $key) {
+				return $translation;
+			}
+		}
+
+		foreach ($this->translations as $translation) {
+			if ($translation->getAttribute($this->getLocaleKey()) === $key) {
+				return $translation;
+			}
+		}
+
+		return null;
 	}
 
 	/**
