@@ -25,6 +25,26 @@ class CrudController extends Controller
 	protected $labels = [];
 
 	/**
+	 * @var string
+	 */
+	protected $routeNamespace;
+
+	/**
+	 * @var bool
+	 */
+	protected $allowCreate = true;
+
+	/**
+	 * @var bool
+	 */
+	protected $allowEdit = true;
+
+	/**
+	 * @var bool
+	 */
+	protected $allowDestroy = true;
+
+	/**
 	 * @var array
 	 */
 	private $baseLabels = [
@@ -91,6 +111,42 @@ class CrudController extends Controller
 	}
 
 	/**
+	 * @param string $action
+	 * @param array $parameters
+	 * @return string
+	 */
+	public function getRoute($action, $parameters = [])
+	{
+		return route($this->routeNamespace .'.'. $action, $parameters);
+	}
+
+	/**
+	 * @return bool
+	 */
+	public function canCreate()
+	{
+		return $this->allowCreate;
+	}
+
+	/**
+	 * @param \Illuminate\Database\Eloquent\Model $item
+	 * @return bool
+	 */
+	public function canEdit(Model $item)
+	{
+		return $this->allowEdit;
+	}
+
+	/**
+	 * @param \Illuminate\Database\Eloquent\Model $item
+	 * @return bool
+	 */
+	public function canDestroy(Model $item)
+	{
+		return $this->allowDestroy;
+	}
+
+	/**
 	 * Display a listing of the resource.
 	 *
 	 * @return \Illuminate\Http\Response
@@ -119,11 +175,16 @@ class CrudController extends Controller
 		/** @var \Yajra\Datatables\Engines\BaseEngine $dataTable */
 		$dataTable = Datatables::of($users);
 
-		$dataTable->addColumn('actions', function($item) {
-			$actions = [
-				'edit'   => '<a href="#"><i class="fa fa-pencil"></i></a>',
-				'delete' => '<a href="#"><i class="fa fa-trash"></i></a>',
-			];
+		$dataTable->addColumn('actions', function(Model $item) {
+			$actions = [];
+
+			if ($this->canEdit($item)) {
+				$actions['edit'] = '<a href="'. $this->getRoute('edit', $item->getKey()) .'"><i class="fa fa-pencil"></i></a>';
+			}
+
+			if ($this->canDestroy($item)) {
+				$actions['destroy'] = '<a href="'. $this->getRoute('destroy', $item->getKey()) .'"><i class="fa fa-trash"></i></a>';
+			}
 
 			return implode(' &nbsp; ', $actions);
 		});
