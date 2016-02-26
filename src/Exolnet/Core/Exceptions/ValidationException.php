@@ -3,10 +3,14 @@
 use Exception;
 use Illuminate\Contracts\Support\Arrayable;
 use Illuminate\Contracts\Support\Jsonable;
+use Illuminate\Contracts\Validation\ValidationException as LaravelValidationException;
+use Illuminate\Http\Exception\HttpResponseException;
+use Illuminate\Http\Request;
+use Illuminate\Support\MessageBag;
 use Illuminate\Validation\Validator;
 use JsonSerializable;
 
-class ValidationException extends Exception implements Arrayable, Jsonable, JsonSerializable
+class ValidationException extends LaravelValidationException implements Arrayable, Jsonable, JsonSerializable
 {
 	/**
 	 * The errors list
@@ -26,17 +30,20 @@ class ValidationException extends Exception implements Arrayable, Jsonable, Json
 	 * @param integer      $code
 	 * @param exception    $previous
 	 */
-	public function __construct($message = null, $code = 0, Exception $previous = null)
+	public function __construct($message = null, $code = 0)
 	{
 		if (is_array($message)) {
 			$this->errors = $message;
-			$message = implode(PHP_EOL, $message);
 		} else {
 			$this->errors = [$message];
 		}
 
+		$messages = new MessageBag($this->errors);
+
 		// Construct an exception
-		parent::__construct($message, $code, $previous);
+		parent::__construct($messages);
+
+		$this->code = $code;
 	}
 
 	/**
@@ -78,6 +85,30 @@ class ValidationException extends Exception implements Arrayable, Jsonable, Json
 	public function getErrors()
 	{
 		return $this->errors;
+	}
+
+	/**
+	 * @param \Illuminate\Http\Request $request
+	 * @return $this|\Illuminate\Http\JsonResponse
+	 */
+	public function toResponse(Request $request)
+	{
+		$errors = $this->getMessageProvider()->getMessageBag()->toArray();
+
+		if ($request->ajax() || $request->wantsJson()) {
+			return response()->json($errors, 422);
+		}
+
+		return redirect()->back()->withInput()->withErrors($errors);
+	}
+
+	/**
+	 * @param \Illuminate\Http\Request $request
+	 * @return \HttpResponseException
+	 */
+	public function toHttpResponseException(Request $request)
+	{
+		return new HttpResponseException($this->toResponse($request));
 	}
 
 	/**
