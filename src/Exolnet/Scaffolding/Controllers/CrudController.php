@@ -59,9 +59,10 @@ class CrudController extends Controller
 		'search_items' => 'Search :name',
 		'filter_items' => 'Filter :name',
 		'not_found' => 'No item to display.',
-		'notice_created' => 'The :sungular_name was successfully created.',
-		'notice_updated' => 'The :sungular_name was successfully updated.',
-		'notice_deleted' => 'The :sungular_name was successfully deleted.',
+		'notice_created' => 'The :singular_name was successfully created.',
+		'notice_updated' => 'The :singular_name was successfully updated.',
+		'notice_deleted' => 'The :singular_name was successfully deleted.',
+		'confirm_delete' => 'Are you sure you want to delete this :singular_name?',
 	];
 
 	/**
@@ -176,17 +177,7 @@ class CrudController extends Controller
 		$dataTable = Datatables::of($users);
 
 		$dataTable->addColumn('actions', function(Model $item) {
-			$actions = [];
-
-			if ($this->canEdit($item)) {
-				$actions['edit'] = '<a href="'. $this->getRoute('edit', $item->getKey()) .'"><i class="fa fa-pencil"></i></a>';
-			}
-
-			if ($this->canDestroy($item)) {
-				$actions['destroy'] = '<a href="'. $this->getRoute('destroy', $item->getKey()) .'"><i class="fa fa-trash"></i></a>';
-			}
-
-			return implode(' &nbsp; ', $actions);
+			return $this->buildActions($item);
 		});
 
 		$this->transformDataTable($dataTable);
@@ -200,6 +191,25 @@ class CrudController extends Controller
 	protected function transformDataTable(BaseEngine $dataTable)
 	{
 		// Default behaviour - do nothing
+	}
+
+	/**
+	 * @param \Illuminate\Database\Eloquent\Model $item
+	 * @return string
+	 */
+	protected function buildActions(Model $item)
+	{
+		$actions = [];
+
+		if ($this->canEdit($item)) {
+			$actions['edit'] = '<a href="'. $this->getRoute('edit', $item->getKey()) .'"><i class="fa fa-pencil"></i></a>';
+		}
+
+		if ($this->canDestroy($item)) {
+			$actions['destroy'] = '<a href="'. $this->getRoute('destroy', $item->getKey()) .'" data-method="DELETE" data-ng-confirm="'. $this->getLabel('confirm_delete') .'"><i class="fa fa-trash"></i></a>';
+		}
+
+		return implode(' &nbsp; ', $actions);
 	}
 
 	/**
@@ -225,10 +235,10 @@ class CrudController extends Controller
 	 */
 	public function store(Request $request)
 	{
-		$this->getCrudService()->create($request->all());
+		/** @var \Illuminate\Database\Eloquent\Model $item */
+		$item = $this->getCrudService()->create($request->all());
 
-		return redirect()
-			->route('admin.user.index')
+		return redirect($this->getRoute('edit', $item->getKey()))
 			->with('notice_success', $this->getLabel('notice_created'));
 	}
 
@@ -270,16 +280,15 @@ class CrudController extends Controller
 	 * Update the specified resource in storage.
 	 *
 	 * @param \Illuminate\Http\Request $request
-	 * @param \Illuminate\Database\Eloquent\Model $model
+	 * @param \Illuminate\Database\Eloquent\Model $item
 	 * @return \Illuminate\Http\Response
 	 */
-	public function update(Request $request, Model $model)
+	public function update(Request $request, Model $item)
 	{
-		$this->getCrudService()->update($model, $request->all());
+		$this->getCrudService()->update($item, $request->all());
 
-		return redirect()
-			->route('admin.user.edit', $model->getKey)
-			->with('message', $this->getLabel('notice_updated'));
+		return redirect($this->getRoute('edit', $item->getKey()))
+			->with('notice_success', $this->getLabel('notice_updated'));
 	}
 
 	/**
@@ -290,8 +299,7 @@ class CrudController extends Controller
 	{
 		$this->getCrudService()->delete($model);
 
-		return redirect()
-			->route('admin.user.index')
-			->with('message', $this->getLabel('notice_deleted'));
+		return redirect($this->getRoute('index'))
+			->with('notice_success', $this->getLabel('notice_deleted'));
 	}
 }
