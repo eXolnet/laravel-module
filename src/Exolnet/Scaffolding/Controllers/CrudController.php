@@ -215,7 +215,7 @@ class CrudController extends Controller
 	/**
 	 * Show the form for creating a new resource.
 	 *
-	 * @return \Illuminate\Http\Response
+	 * @return \Illuminate\View\View|\Illuminate\Contracts\View\Factory
 	 */
 	public function create()
 	{
@@ -224,6 +224,7 @@ class CrudController extends Controller
 		return view($this->baseViewPath .'.create', [
 			'labels' => $labels,
 			'title'  => $labels['new_item'],
+			'actionRoute' => $this->baseViewPath.'.store',
 		]);
 	}
 
@@ -246,13 +247,13 @@ class CrudController extends Controller
 	 * Show the specified resource.
 	 *
 	 * @param \Illuminate\Database\Eloquent\Model $model
-	 * @return \Illuminate\Http\Response
+	 * @return \Illuminate\View\View|\Illuminate\Contracts\View\Factory
 	 */
 	public function show(Model $model)
 	{
 		$labels = $this->getLabels();
 
-		return view('admin.user.show', [
+		return view($this->baseViewPath .'.show', [
 			'labels' => $labels,
 			'model'  => $model,
 			'title'  => $labels['view_item'],
@@ -263,16 +264,17 @@ class CrudController extends Controller
 	 * Show the form for editing the specified resource.
 	 *
 	 * @param \Illuminate\Database\Eloquent\Model $model
-	 * @return \Illuminate\Http\Response
+	 * @return \Illuminate\View\View|\Illuminate\Contracts\View\Factory
 	 */
 	public function edit(Model $model)
 	{
 		$labels = $this->getLabels();
 
-		return view('admin.user.edit', [
+		return view($this->baseViewPath .'.edit', [
 			'labels' => $labels,
 			'model'  => $model,
 			'title'  => $labels['edit_item'],
+			'actionRoute' => array($this->baseViewPath.'.update', $model->id),
 		]);
 	}
 
@@ -293,7 +295,7 @@ class CrudController extends Controller
 
 	/**
 	 * @param \Illuminate\Database\Eloquent\Model $model
-	 * @return \Illuminate\Http\RedirectResponse
+	 * @return \Illuminate\Http\Response
 	 */
 	public function destroy(Model $model)
 	{
