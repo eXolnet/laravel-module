@@ -21,6 +21,26 @@ class UrlGenerator extends LaravelUrlGenerator
 		return parent::route($name, $parameters, $absolute);
 	}
 
+	/**
+	 * @param array $parameters
+	 * @param bool $append
+	 * @return string
+	 */
+	public function relative(array $parameters = [], $append = true)
+	{
+		$uri = $this->current();
+
+		if ($this->request->getQueryString() && $append) {
+			$parameters = array_merge($this->request->query(), $parameters);
+		}
+
+		if (count($parameters) > 0) {
+			$uri = $this->addQueryString($uri, $parameters);
+		}
+
+		return $uri;
+	}
+
 	// Is it possible to do something for this kind of method?
 	// public function to($path, $extra = array(), $secure = null)
 	// {
