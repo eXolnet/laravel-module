@@ -1,9 +1,9 @@
 <?php namespace Exolnet\Scaffolding\Controllers;
 
+use App\Http\Controllers\Controller;
 use Exolnet\Scaffolding\Services\CrudService;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\Request;
-use Illuminate\Routing\Controller;
 use Yajra\Datatables\Datatables;
 use Yajra\Datatables\Engines\BaseEngine;
 
@@ -43,6 +43,11 @@ class CrudController extends Controller
 	 * @var bool
 	 */
 	protected $allowDestroy = true;
+
+	/**
+	 * @var array
+	 */
+	protected $validation = [];
 
 	/**
 	 * @var array
@@ -236,6 +241,8 @@ class CrudController extends Controller
 	 */
 	public function store(Request $request)
 	{
+		$this->validate($request, $this->getRulesStore(), $this->getValidationMessages(), $this->getValidationAttributes());
+
 		/** @var \Illuminate\Database\Eloquent\Model $item */
 		$item = $this->getCrudService()->create($request->all());
 
@@ -287,6 +294,8 @@ class CrudController extends Controller
 	 */
 	public function update(Request $request, Model $item)
 	{
+		$this->validate($request, $this->getRulesUpdate($item), $this->getValidationMessages(), $this->getValidationAttributes());
+
 		$this->getCrudService()->update($item, $request->all());
 
 		return redirect($this->getRoute('edit', $item->getKey()))
@@ -303,5 +312,46 @@ class CrudController extends Controller
 
 		return redirect($this->getRoute('index'))
 			->with('notice_success', $this->getLabel('notice_deleted'));
+	}
+
+	/**
+	 * @return array
+	 */
+	protected function getRules()
+	{
+		return [];
+	}
+
+	/**
+	 * @return array
+	 */
+	protected function getRulesStore()
+	{
+		return $this->getRules();
+	}
+
+	/**
+	 * @param \Illuminate\Database\Eloquent\Model $model
+	 * @return array
+	 */
+	protected function getRulesUpdate(Model $model)
+	{
+		return $this->getRules();
+	}
+
+	/**
+	 * @return array
+	 */
+	protected function getValidationMessages()
+	{
+		return [];
+	}
+
+	/**
+	 * @return array
+	 */
+	protected function getValidationAttributes()
+	{
+		return [];
 	}
 }
