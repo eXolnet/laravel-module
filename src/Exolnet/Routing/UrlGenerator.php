@@ -43,6 +43,14 @@ class UrlGenerator extends LaravelUrlGenerator
 		return $uri;
 	}
 
+	/**
+	 * @return string
+	 */
+	public function canonical()
+	{
+		return $this->full();
+	}
+
 	// Is it possible to do something for this kind of method?
 	// public function to($path, $extra = array(), $secure = null)
 	// {
