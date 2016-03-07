@@ -13,18 +13,18 @@ interface CrudService
 	 * @param array $data
 	 * @return \Illuminate\Database\Eloquent\Model
 	 */
-	public function create(array $data);
+	//public function create(array $data);
 
 	/**
 	 * @param \Illuminate\Database\Eloquent\Model $model
 	 * @param array $data
 	 * @return void
 	 */
-	public function update(Model $model, array $data);
+	//public function update(Model $model, array $data);
 
 	/**
 	 * @param \Illuminate\Database\Eloquent\Model $model
 	 * @return bool
 	 */
-	public function delete(Model $model);
+	//public function delete(Model $model);
 }

@@ -167,6 +167,19 @@ trait Translatable {
 	}
 
 	/**
+	 * @param array $translations
+	 * @return $this
+	 */
+	public function fillTranslations(array $translations)
+	{
+		foreach ($translations as $locale => $data) {
+			$this->getTranslationOrNew($locale)->fill($data);
+		}
+
+		return $this;
+	}
+
+	/**
 	 * @param array $attributes
 	 * @return $this
 	 */

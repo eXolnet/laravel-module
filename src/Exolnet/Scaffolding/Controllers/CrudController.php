@@ -1,6 +1,7 @@
 <?php namespace Exolnet\Scaffolding\Controllers;
 
 use App\Http\Controllers\Controller;
+use Exolnet\Core\Arr;
 use Exolnet\Scaffolding\Services\CrudService;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\Request;
@@ -243,8 +244,10 @@ class CrudController extends Controller
 	{
 		$this->validate($request, $this->getRulesStore(), $this->getValidationMessages(), $this->getValidationAttributes());
 
+		$data = Arr::mapNullOnEmpty($request->all());
+
 		/** @var \Illuminate\Database\Eloquent\Model $item */
-		$item = $this->getCrudService()->create($request->all());
+		$item = $this->getCrudService()->create($data);
 
 		return redirect($this->getRoute('edit', $item->getKey()))
 			->with('notice_success', $this->getLabel('notice_created'));
@@ -277,6 +280,10 @@ class CrudController extends Controller
 	{
 		$labels = $this->getLabels();
 
+		if (method_exists($model, 'translationsAsObject')) {
+			$model->translation = $model->translationsAsObject();
+		}
+
 		return view($this->baseViewPath .'.edit', [
 			'labels' => $labels,
 			'model'  => $model,
@@ -296,7 +303,8 @@ class CrudController extends Controller
 	{
 		$this->validate($request, $this->getRulesUpdate($item), $this->getValidationMessages(), $this->getValidationAttributes());
 
-		$this->getCrudService()->update($item, $request->all());
+		$data = Arr::mapNullOnEmpty($request->all());
+		$this->getCrudService()->update($item, $data);
 
 		return redirect($this->getRoute('edit', $item->getKey()))
 			->with('notice_success', $this->getLabel('notice_updated'));
