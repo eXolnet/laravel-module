@@ -64,7 +64,7 @@ class CrudController extends Controller
 		'new_item' => 'New :singular_name',
 		'search_items' => 'Search :name',
 		'filter_items' => 'Filter :name',
-		'not_found' => 'No item to display.',
+		'not_found' => 'No :singular_name_lower to display.',
 		'notice_created' => 'The :singular_name_lower was successfully created.',
 		'notice_updated' => 'The :singular_name_lower was successfully updated.',
 		'notice_deleted' => 'The :singular_name_lower was successfully deleted.',
@@ -239,9 +239,10 @@ class CrudController extends Controller
 		$labels = $this->getLabels();
 
 		return view($this->baseViewPath .'.create', [
-			'labels' => $labels,
-			'title'  => $labels['new_item'],
-			'actionRoute' => $this->baseViewPath.'.store',
+			'labels'      => $labels,
+			'title'       => $labels['new_item'],
+			'urlBack'     => $this->getRoute('index'),
+			'actionRoute' => $this->getRoute('store'),
 		]);
 	}
 
@@ -300,7 +301,7 @@ class CrudController extends Controller
 			'model'       => $model,
 			'title'       => $labels['edit_item'],
 			'urlBack'     => $this->getRoute('index'),
-			'actionRoute' => array($this->baseViewPath.'.update', $model->id),
+			'actionRoute' => $this->getRoute('update', $model->getKey()),
 		]);
 	}
 
