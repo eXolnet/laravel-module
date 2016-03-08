@@ -185,7 +185,7 @@ class CrudController extends Controller
 		$dataTable = Datatables::of($users);
 
 		$dataTable->addColumn('actions', function(Model $item) {
-			return $this->buildActions($item);
+			return $this->getActions($item);
 		});
 
 		$this->transformDataTable($dataTable);
@@ -203,7 +203,7 @@ class CrudController extends Controller
 
 	/**
 	 * @param \Illuminate\Database\Eloquent\Model $item
-	 * @return string
+	 * @return array
 	 */
 	protected function buildActions(Model $item)
 	{
@@ -217,7 +217,16 @@ class CrudController extends Controller
 			$actions['destroy'] = '<a href="'. $this->getRoute('destroy', $item->getKey()) .'" data-method="DELETE" data-ng-confirm="'. $this->getLabel('confirm_delete') .'"><i class="fa fa-trash"></i></a>';
 		}
 
-		return implode(' &nbsp; ', $actions);
+		return $actions;
+	}
+
+	/**
+	 * @param \Illuminate\Database\Eloquent\Model $item
+	 * @return string
+	 */
+	protected function getActions(Model $item)
+	{
+		return implode(' &nbsp; ', $this->buildActions($item));
 	}
 
 	/**
