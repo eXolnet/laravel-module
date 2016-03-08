@@ -65,10 +65,10 @@ class CrudController extends Controller
 		'search_items' => 'Search :name',
 		'filter_items' => 'Filter :name',
 		'not_found' => 'No item to display.',
-		'notice_created' => 'The :singular_name was successfully created.',
-		'notice_updated' => 'The :singular_name was successfully updated.',
-		'notice_deleted' => 'The :singular_name was successfully deleted.',
-		'confirm_delete' => 'Are you sure you want to delete this :singular_name?',
+		'notice_created' => 'The :singular_name_lower was successfully created.',
+		'notice_updated' => 'The :singular_name_lower was successfully updated.',
+		'notice_deleted' => 'The :singular_name_lower was successfully deleted.',
+		'confirm_delete' => 'Are you sure you want to delete this :singular_name_lower?',
 	];
 
 	/**
@@ -98,8 +98,10 @@ class CrudController extends Controller
 		$labels = $this->labels + $this->baseLabels;
 
 		$replacements = [
-			':name'          => $labels['name'],
-			':singular_name' => $labels['singular_name'],
+			':name'                => $labels['name'],
+			':singular_name'       => $labels['singular_name'],
+			':name_lower'          => array_get($labels, 'name_lower', mb_strtolower($labels['name'])),
+			':singular_name_lower' => array_get($labels, 'singular_name_lower', mb_strtolower($labels['singular_name'])),
 		];
 
 		return array_map(function($label) use ($replacements) {
@@ -285,9 +287,10 @@ class CrudController extends Controller
 		}
 
 		return view($this->baseViewPath .'.edit', [
-			'labels' => $labels,
-			'model'  => $model,
-			'title'  => $labels['edit_item'],
+			'labels'      => $labels,
+			'model'       => $model,
+			'title'       => $labels['edit_item'],
+			'urlBack'     => $this->getRoute('index'),
 			'actionRoute' => array($this->baseViewPath.'.update', $model->id),
 		]);
 	}
