@@ -4,7 +4,7 @@ use BadMethodCallException;
 use Illuminate\View\View;
 use PHPUnit_Framework_Assert as PHPUnit;
 
-class TestCaseFunctional extends \TestCase {
+abstract class TestCaseFunctional extends \TestCase {
 	public function __call($method, $args)
 	{
 		// Setup AJAX query

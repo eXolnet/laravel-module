@@ -6,7 +6,7 @@ use Exolnet\Test\Traits\AssertionsTrait;
 use Faker\Factory as FakerFactory;
 use Mockery as m;
 
-class TestCase extends \Illuminate\Foundation\Testing\TestCase {
+abstract class TestCase extends \Illuminate\Foundation\Testing\TestCase {
 	use AssertionsTrait;
 
 	/**
