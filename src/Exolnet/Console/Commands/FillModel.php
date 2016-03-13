@@ -70,7 +70,11 @@ class FillModel extends Command {
 		}
 	}
 
-	public function fillModel(SplFileInfo $fileInfo)
+	/**
+	 * @param \Symfony\Component\Finder\SplFileInfo $fileInfo
+	 * @throws \Illuminate\Contracts\Filesystem\FileNotFoundException
+	 */
+	private function fillModel(SplFileInfo $fileInfo)
 	{
 		$qualifiedName = $this->getQualifiedName($fileInfo);
 		$qualifiedNamespace = $this->getNamespace($qualifiedName);
@@ -174,7 +178,14 @@ class FillModel extends Command {
 		$this->files->put($fileInfo, $content);
 	}
 
-	public function makeGetterSetter($column, $getterPrefix = 'get', $typeHinting = null, $cast = null)
+	/**
+	 * @param string $column
+	 * @param string $getterPrefix
+	 * @param string|null $typeHinting
+	 * @param string|null $cast
+	 * @return array
+	 */
+	private function makeGetterSetter($column, $getterPrefix = 'get', $typeHinting = null, $cast = null)
 	{
 		$name = Str::studly($column);
 		$name = preg_replace('/^(is_|has_)/i', '', $name);
@@ -212,7 +223,12 @@ class FillModel extends Command {
 		];
 	}
 
-	public function makeRelation($column, $related)
+	/**
+	 * @param string $column
+	 * @param string $related
+	 * @return array
+	 */
+	private function makeRelation($column, $related)
 	{
 		$functionName = Str::camel($column);
 		$functionName = preg_replace('/Id$/i', '', $functionName);
@@ -228,7 +244,12 @@ class FillModel extends Command {
 		];
 	}
 
-	public function makeRelationGetterSetter($column, $related)
+	/**
+	 * @param string $column
+	 * @param string $related
+	 * @return array
+	 */
+	private function makeRelationGetterSetter($column, $related)
 	{
 		$name = Str::studly($column);
 		$camelColumn = Str::camel($column);
@@ -266,7 +287,7 @@ class FillModel extends Command {
 	 * @param \Symfony\Component\Finder\SplFileInfo $fileInfo
 	 * @return string
 	 */
-	protected function getQualifiedName(SplFileInfo $fileInfo)
+	private function getQualifiedName(SplFileInfo $fileInfo)
 	{
 		if ( ! preg_match('/namespace (.+?);/', $fileInfo->getContents(), $match)) {
 			return null;
@@ -275,6 +296,10 @@ class FillModel extends Command {
 		return $match[1].'\\'. $fileInfo->getBasename('.php');
 	}
 
+	/**
+	 * @param string $qualifiedName
+	 * @return string
+	 */
 	private function getNamespace($qualifiedName)
 	{
 		if (strpos($qualifiedName, '\\') === false) {

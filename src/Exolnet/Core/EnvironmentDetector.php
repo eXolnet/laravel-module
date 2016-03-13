@@ -2,6 +2,9 @@
 
 class EnvironmentDetector
 {
+	/**
+	 * @var array
+	 */
 	private static $environments = [
 		'development.exolnet.com' => 'local',
 		'staging.exolnet.com'     => 'staging',
@@ -10,7 +13,7 @@ class EnvironmentDetector
 	];
 
 	/**
-	 * @param $environments
+	 * @param mixed $environments
 	 * @return callable
 	 */
 	public static function detect($environments)

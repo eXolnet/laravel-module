@@ -48,7 +48,7 @@ class GenerateModels extends Command {
 	/**
 	 * Execute the console command.
 	 *
-	 * @return mixed
+	 * @return void
 	 */
 	public function handle()
 	{
@@ -73,7 +73,7 @@ class GenerateModels extends Command {
 	 * @param array $tables
 	 * @return array
 	 */
-	public function retrieveMissingModels(array $tables)
+	private function retrieveMissingModels(array $tables)
 	{
 		$tables_in_database = 'Tables_in_' . Config::get('database.connections.mysql.database');
 		$tablesList = [];
@@ -151,9 +151,10 @@ class GenerateModels extends Command {
 	}
 
 	/**
-	 * @param       $namespace
-	 * @param       $modelName
-	 * @param array $columns
+	 * @param string $namespace
+	 * @param string $modelName
+	 * @param string $tableName
+	 * @param array|null $columns
 	 */
 	private function generateModel($namespace, $modelName, $tableName, array $columns = null)
 	{

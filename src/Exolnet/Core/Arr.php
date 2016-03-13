@@ -2,6 +2,12 @@
 
 class Arr
 {
+	/**
+	 * @param array $array
+	 * @param string $value
+	 * @param string|null $key
+	 * @return array
+	 */
 	public static function pluck($array, $value, $key = null)
 	{
 		$results = [];
@@ -24,6 +30,12 @@ class Arr
 		return $results;
 	}
 
+	/**
+	 * Replace empty strings to NULLs values.
+	 *
+	 * @param array $items
+	 * @return array
+	 */
 	public static function mapNullOnEmpty(array $items)
 	{
 		return array_map(function ($item) {
@@ -39,6 +51,12 @@ class Arr
 		}, $items);
 	}
 
+	/**
+	 * Remove one or multiple keys from an array using the dot notation.
+	 *
+	 * @param array $array
+	 * @param $keys
+	 */
 	public static function forget(&$array, $keys)
 	{
 		$original =& $array;

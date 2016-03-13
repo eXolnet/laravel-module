@@ -42,7 +42,7 @@ class QueueSetup extends Command {
 	/**
 	 * Execute the console command.
 	 *
-	 * @return mixed
+	 * @return void
 	 */
 	public function handle()
 	{
@@ -197,7 +197,7 @@ EOC;
 	}
 
 	/**
-	 * @param $warning
+	 * @param string $warning
 	 * @return bool
 	 */
 	private function confirmToProceed($warning)
