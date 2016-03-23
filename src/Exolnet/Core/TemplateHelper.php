@@ -1,7 +1,7 @@
 <?php namespace Exolnet\Core;
 
+use Illuminate\Support\Str;
 use Route;
-use Str;
 
 class TemplateHelper
 {
