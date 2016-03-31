@@ -268,10 +268,11 @@ class CrudController extends Controller
 	/**
 	 * Show the specified resource.
 	 *
+	 * @param \Illuminate\Http\Request            $request
 	 * @param \Illuminate\Database\Eloquent\Model $model
-	 * @return \Illuminate\View\View|\Illuminate\Contracts\View\Factory
+	 * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
 	 */
-	public function show(Model $model)
+	public function show(Request $request, Model $model)
 	{
 		$labels = $this->getLabels();
 
@@ -285,10 +286,11 @@ class CrudController extends Controller
 	/**
 	 * Show the form for editing the specified resource.
 	 *
+	 * @param \Illuminate\Http\Request            $request
 	 * @param \Illuminate\Database\Eloquent\Model $model
-	 * @return \Illuminate\View\View|\Illuminate\Contracts\View\Factory
+	 * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
 	 */
-	public function edit(Model $model)
+	public function edit(Request $request, Model $model)
 	{
 		$labels = $this->getLabels();
 
@@ -324,10 +326,11 @@ class CrudController extends Controller
 	}
 
 	/**
+	 * @param \Illuminate\Http\Request            $request
 	 * @param \Illuminate\Database\Eloquent\Model $model
 	 * @return \Illuminate\Http\Response
 	 */
-	public function destroy(Model $model)
+	public function destroy(Request $request, Model $model)
 	{
 		$this->getCrudService()->delete($model);
 
