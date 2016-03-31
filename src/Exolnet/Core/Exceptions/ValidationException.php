@@ -78,6 +78,17 @@ class ValidationException extends LaravelValidationException implements Arrayabl
 	}
 
 	/**
+	 * @param array $errors
+	 * @return $this
+	 */
+	public function setErrors(array $errors)
+	{
+		$this->errors = $errors;
+
+		return $this;
+	}
+
+	/**
 	 * Get the errors
 	 *
 	 * @return array
