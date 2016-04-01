@@ -5,6 +5,7 @@ use Exolnet\Core\Arr;
 use Exolnet\Scaffolding\Services\CrudService;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\Request;
+use Illuminate\Support\Str;
 use Yajra\Datatables\Datatables;
 use Yajra\Datatables\Engines\BaseEngine;
 
@@ -120,6 +121,15 @@ class CrudController extends Controller
 	}
 
 	/**
+	 * @param string $key
+	 * @return string
+	 */
+	public function getVariableNameFromLabel($key)
+	{
+		return Str::camel($this->getLabel($key));
+	}
+
+	/**
 	 * @param string $action
 	 * @param array $parameters
 	 * @return string
@@ -166,7 +176,7 @@ class CrudController extends Controller
 			return $this->indexHandleDataTable();
 		}
 
-		$labels = $this->getLabels();
+		$labels   = $this->getLabels();
 
 		return view($this->baseViewPath .'.index', [
 			'labels' => $labels,
@@ -274,12 +284,14 @@ class CrudController extends Controller
 	 */
 	public function show(Request $request, Model $model)
 	{
-		$labels = $this->getLabels();
+		$labels   = $this->getLabels();
+		$variable = $this->getVariableNameFromLabel('singular_name');
 
 		return view($this->baseViewPath .'.show', [
-			'labels' => $labels,
-			'model'  => $model,
-			'title'  => $labels['view_item'],
+			'labels'  => $labels,
+			'model'   => $model,
+			$variable => $model,
+			'title'   => $labels['view_item'],
 		]);
 	}
 
@@ -292,7 +304,8 @@ class CrudController extends Controller
 	 */
 	public function edit(Request $request, Model $model)
 	{
-		$labels = $this->getLabels();
+		$labels   = $this->getLabels();
+		$variable = $this->getVariableNameFromLabel('singular_name');
 
 		if (method_exists($model, 'translationsAsObject')) {
 			$model->translation = $model->translationsAsObject();
@@ -301,6 +314,7 @@ class CrudController extends Controller
 		return view($this->baseViewPath .'.edit', [
 			'labels'      => $labels,
 			'model'       => $model,
+			$variable     => $model,
 			'title'       => $labels['edit_item'],
 			'urlBack'     => $this->getRoute('index'),
 			'actionRoute' => $this->getRoute('update', $model->getKey()),
