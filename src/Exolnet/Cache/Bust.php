@@ -1,7 +1,49 @@
 <?php namespace Exolnet\Cache;
 
+use Illuminate\Filesystem\Filesystem;
+
 class Bust
 {
+	/**
+	 * @var \Illuminate\Filesystem\Filesystem
+	 */
+	private $filesystem;
+
+	/**
+	 * @var bool
+	 */
+	protected $enabled = true;
+
+	/**
+	 * Bust constructor.
+	 *
+	 * @param \Illuminate\Filesystem\Filesystem $filesystem
+	 */
+	public function __construct(Filesystem $filesystem)
+	{
+
+		$this->filesystem = $filesystem;
+	}
+
+	/**
+	 * @return bool
+	 */
+	public function isEnabled()
+	{
+		return $this->enabled;
+	}
+
+	/**
+	 * @param bool $enabled
+	 * @return $this
+	 */
+	public function setEnabled($enabled)
+	{
+		$this->enabled = (bool)$enabled;
+
+		return $this;
+	}
+
 	/**
 	 * Generate an asset path for the application with the file's last modification timestamp
 	 * to avoid cashing.
@@ -12,13 +54,17 @@ class Bust
 	 */
 	public function asset($path, $secure = null)
 	{
-		$full_path = public_path() . '/' . $path;
-
-		if ( ! file_exists($full_path)) {
+		if ( ! $this->isEnabled()) {
 			return asset($path, $secure);
 		}
 
-		$time = filemtime($full_path);
+		$full_path = public_path() . '/' . $path;
+
+		if ( ! $this->filesystem->exists($full_path)) {
+			return asset($path, $secure);
+		}
+
+		$time = $this->filesystem->lastModified($full_path);
 
 		if ( ! $time) {
 			return asset($path, $secure);
