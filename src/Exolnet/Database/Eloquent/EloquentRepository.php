@@ -70,7 +70,7 @@ class EloquentRepository implements Repository
 	 */
 	public function create(Model $model)
 	{
-		return $model->create();
+		return $model->save();
 	}
 
 	/**
@@ -79,7 +79,7 @@ class EloquentRepository implements Repository
 	 */
 	public function update(Model $model)
 	{
-		return $model->update();
+		return $model->save();
 	}
 
 	/**
