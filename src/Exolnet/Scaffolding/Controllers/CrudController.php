@@ -168,12 +168,13 @@ class CrudController extends Controller
 	/**
 	 * Display a listing of the resource.
 	 *
+	 * @param Request $request
 	 * @return \Illuminate\Http\Response
 	 */
 	public function index(Request $request)
 	{
 		if ($request->get('draw')) {
-			return $this->indexHandleDataTable();
+			return $this->indexHandleDataTable($request);
 		}
 
 		$labels   = $this->getLabels();
@@ -185,11 +186,12 @@ class CrudController extends Controller
 	}
 
 	/**
+	 * @param Request $request
 	 * @return \Illuminate\Http\JsonResponse
 	 */
-	public function indexHandleDataTable()
+	public function indexHandleDataTable(Request $request)
 	{
-		$users = $this->crudService->getBaseDataTableData();
+		$users = $this->getBaseDataTableData($request);
 
 		/** @var \Yajra\Datatables\Engines\BaseEngine $dataTable */
 		$dataTable = Datatables::of($users);
@@ -201,6 +203,15 @@ class CrudController extends Controller
 		$this->transformDataTable($dataTable);
 
 		return $dataTable->make(true);
+	}
+
+	/**
+	 * @param Request $request
+	 * @return \Illuminate\Database\Eloquent\Builder|\Illuminate\Database\Query\Builder|\Illuminate\Support\Collection
+	 */
+	protected function getBaseDataTableData(Request $request)
+	{
+		return $this->crudService->getBaseDataTableData();
 	}
 
 	/**
