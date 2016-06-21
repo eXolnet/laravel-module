@@ -1,8 +1,8 @@
 <?php namespace Exolnet\Core\Exceptions;
 
 use Exception;
-use Illuminate\Support\Contracts\ArrayableInterface;
-use Illuminate\Support\Contracts\JsonableInterface;
+use Illuminate\Support\Contracts\ArrayableInterface as Arrayable;
+use Illuminate\Support\Contracts\JsonableInterface as Jsonable;
 use Illuminate\Validation\Validator;
 use JsonSerializable;
 
