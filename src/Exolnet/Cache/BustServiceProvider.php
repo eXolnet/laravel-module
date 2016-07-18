@@ -18,7 +18,7 @@ class BustServiceProvider extends ServiceProvider
 	 */
 	public function register()
 	{
-		$this->app->bindShared('bust', function ($app) {
+		$this->app->singleton('bust', function ($app) {
 			return app(Bust::class);
 		});
 	}
