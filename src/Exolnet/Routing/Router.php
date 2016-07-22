@@ -117,7 +117,13 @@ class Router extends LaravelRouter
 			$action['as'] = preg_replace('/(^|\.)'. $locale .'\./', '\1', $action['as']);
 		}
 
-		return (new Route($methods, $uri, $action, $locale))->setContainer($this->container);
+		$route = (new Route($methods, $uri, $action, $locale))->setContainer($this->container);
+
+		if (method_exists($route, 'setRouter')) {
+			$route->setRouter($this);
+		}
+
+		return $route;
 	}
 
 	//==========================================================================
