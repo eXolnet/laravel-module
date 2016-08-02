@@ -9,8 +9,7 @@ use Mockery\Exception\RuntimeException;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Redirect;
 
-class Router extends LaravelRouter
-{
+class Router extends LaravelRouter {
 	/**
 	 * @var array
 	 */
@@ -24,8 +23,8 @@ class Router extends LaravelRouter
 	/**
 	 * Create a new Router instance.
 	 *
-	 * @param  \Illuminate\Contracts\Events\Dispatcher  $events
-	 * @param  \Illuminate\Container\Container  $container
+	 * @param  \Illuminate\Contracts\Events\Dispatcher $events
+	 * @param  \Illuminate\Container\Container         $container
 	 */
 	public function __construct(Dispatcher $events, Container $container = null)
 	{
@@ -67,17 +66,31 @@ class Router extends LaravelRouter
 	 */
 	public function getAlternateLocales()
 	{
-		return array_filter($this->getLocales(), function($locale) {
+		return array_filter($this->getLocales(), function ($locale) {
 			return App::getLocale() !== $locale;
 		});
 	}
 
 	/**
-	 * @param \Closure $callback
+	 * @param \Closure   $callback
 	 * @param array|null $locales
-	 * @param bool $avoidPrefixOnBaseLocale
+	 * @param bool       $avoidPrefixOnBaseLocale
 	 */
 	public function groupLocales(Closure $callback, array $locales = null, $avoidPrefixOnBaseLocale = false)
+	{
+		$this->stackLocales(function ($locale) use ($callback, $avoidPrefixOnBaseLocale) {
+			$shouldPrefixLocale = ! $avoidPrefixOnBaseLocale || $this->getBaseLocale() !== $locale;
+			$prefix = $shouldPrefixLocale ? $locale : '';
+
+			$this->group(['prefix' => $prefix], $callback);
+		}, $locales);
+	}
+
+	/**
+	 * @param \Closure   $callback
+	 * @param array|null $locales
+	 */
+	public function stackLocales(Closure $callback, array $locales = null)
 	{
 		if ($locales === null) {
 			$locales = $this->getLocales();
@@ -86,10 +99,7 @@ class Router extends LaravelRouter
 		foreach ($locales as $locale) {
 			array_push($this->localeStack, $locale);
 
-			$shouldPrefixLocale = ! $avoidPrefixOnBaseLocale || $this->getBaseLocale() !== $locale;
-			$prefix = $shouldPrefixLocale ? $locale : '';
-
-			$this->group(['prefix' => $prefix], $callback);
+			$callback($locale);
 
 			array_pop($this->localeStack);
 		}
@@ -114,7 +124,7 @@ class Router extends LaravelRouter
 		// "en.page.en" (the local is in double). To avoid this, we replace all locales that are
 		// not at the end.
 		if (array_key_exists('as', $action)) {
-			$action['as'] = preg_replace('/(^|\.)'. $locale .'\./', '\1', $action['as']);
+			$action['as'] = preg_replace('/(^|\.)' . $locale . '\./', '\1', $action['as']);
 		}
 
 		$route = (new Route($methods, $uri, $action, $locale))->setContainer($this->container);
@@ -145,7 +155,7 @@ class Router extends LaravelRouter
 	//==========================================================================
 
 	/**
-	 * @param string $route
+	 * @param string       $route
 	 * @param string|array $aliases
 	 * @throws \Mockery\Exception\RuntimeException
 	 */
@@ -154,19 +164,19 @@ class Router extends LaravelRouter
 		$route = $this->getRoutes()->getByName($route);
 
 		if ($route === null) {
-			throw new RuntimeException('No route named "'. $route .'" found for alias.');
+			throw new RuntimeException('No route named "' . $route . '" found for alias.');
 		}
 
 		foreach ((array)$aliases as $alias) {
-			$this->match($route->methods(), $alias, function() use ($route) {
+			$this->match($route->methods(), $alias, function () use ($route) {
 				return Redirect::route($route->getName());
 			});
 		}
 	}
 
 	/**
-	 * @param $key
-	 * @param \Closure $query
+	 * @param               $key
+	 * @param \Closure      $query
 	 * @param \Closure|null $callback
 	 */
 	public function bindQuery($key, Closure $query, Closure $callback = null)
@@ -192,20 +202,20 @@ class Router extends LaravelRouter
 	}
 
 	/**
-	 * @param string $key
-	 * @param string $class
+	 * @param string        $key
+	 * @param string        $class
 	 * @param \Closure|null $callback
 	 */
 	public function bindSlugable($key, $class, Closure $callback = null)
 	{
-		$this->bindQuery($key, function($value) use ($class) {
+		$this->bindQuery($key, function ($value) use ($class) {
 			// For model binders, we will attempt to retrieve the models using the first
 			// method on the model instance. If we cannot retrieve the models we'll
 			// throw a not found exception otherwise we will return the instance.
 			$instance = $this->container->make($class);
 
 			/** @var \Exolnet\Routing\Slugable $model */
-			$model    = $instance->where($instance->getRouteKeyName(), $value)->first();
+			$model = $instance->where($instance->getRouteKeyName(), $value)->first();
 
 			if ($model && $model->getSlug() === $value) {
 				return $model;
