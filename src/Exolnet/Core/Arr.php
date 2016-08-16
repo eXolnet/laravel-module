@@ -1,6 +1,8 @@
 <?php namespace Exolnet\Core;
 
-class Arr
+use Illuminate\Support\Arr as LaravelArr;
+
+class Arr extends LaravelArr
 {
 	/**
 	 * @param array $array
@@ -89,6 +91,41 @@ class Arr
 
 			// reset to initial array
 			$array =& $original;
+		}
+	}
+
+	/**
+	 * Load values from a dictionary in an array. Values are linked with a lookup key and a
+	 * target key is set in the array with the value found in the dictionary.
+	 *
+	 * @param \ArrayAccess|array $array
+	 * @param \ArrayAccess|array $dictionary
+	 * @param string $lookupKey
+	 * @param string $targetKey
+	 * @param mixed $defaultValue
+	 */
+	public static function inject(&$array, $dictionary, $lookupKey, $targetKey, $defaultValue = null)
+	{
+		foreach ($array as &$item) {
+			$value = self::get($dictionary, self::get($item, $lookupKey), $defaultValue);
+
+			self::set($item, $targetKey, $value);
+		}
+	}
+
+	/**
+	 * @param \ArrayAccess|array $array
+	 * @param \ArrayAccess|array $dictionary
+	 * @param string $lookupKey
+	 */
+	public static function injectAll(&$array, $dictionary, $lookupKey)
+	{
+		foreach ($array as &$item) {
+			$values = self::get($dictionary, self::get($item, $lookupKey), []);
+
+			foreach ($values as $key => $value) {
+				self::set($item, $key, $value);
+			}
 		}
 	}
 }
