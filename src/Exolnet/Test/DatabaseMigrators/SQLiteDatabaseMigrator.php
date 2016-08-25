@@ -1,6 +1,7 @@
 <?php namespace Exolnet\Test\DatabaseMigrators;
 
 use Artisan;
+use DB;
 use Illuminate\Filesystem\Filesystem;
 
 class SQLiteDatabaseMigrator extends DatabaseMigrator
@@ -11,12 +12,15 @@ class SQLiteDatabaseMigrator extends DatabaseMigrator
 	protected $file;
 	protected $cloneFile;
 
+	protected $signatureFiles = '{migrations,seeds}/*.php';
+
 	/**
-	 * @param $file
+	 * @param null|string $file
+	 * @param null|string $connection
 	 */
-	public function __construct($file)
+	public function __construct($file, $connection = null)
 	{
-		parent::__construct();
+		parent::__construct($connection);
 		$this->filesystem = new Filesystem;
 
 		$this->file = $file;
@@ -33,14 +37,24 @@ class SQLiteDatabaseMigrator extends DatabaseMigrator
 		}
 	}
 
+	/**
+	 * @param string $signatureFiles
+	 */
+	public function setSignatureFiles($signatureFiles)
+	{
+		$this->signatureFiles = $signatureFiles;
+
+		return $this;
+	}
+
 	protected function configurePragma()
 	{
 		// Enable foreign keys for the current connection/file
-		\DB::statement('PRAGMA foreign_keys = ON;');
+		DB::statement('PRAGMA foreign_keys = ON;');
 		// Create sqlite-journal in memory only (instead of creating disk files)
-		\DB::statement('PRAGMA journal_mode = MEMORY;');
+		DB::statement('PRAGMA journal_mode = MEMORY;');
 		// Do not wait for OS after sending write commands
-		\DB::statement('PRAGMA synchronous = OFF;');
+		DB::statement('PRAGMA synchronous = OFF;');
 	}
 
 	protected function initialMigration()
@@ -56,10 +70,8 @@ class SQLiteDatabaseMigrator extends DatabaseMigrator
 
 		$this->configurePragma();
 
-		Artisan::call('migrate');
-		if (file_exists(base_path('database/seeds/TestSeeder.php'))) {
-			Artisan::call('db:seed', ['--class' => 'TestSeeder']);
-		}
+		$this->migrate();
+		$this->seed();
 
 		$this->filesystem->copy($this->file, $this->cloneFile);
 
@@ -133,7 +145,7 @@ class SQLiteDatabaseMigrator extends DatabaseMigrator
 
 	protected function calculateFilesSignature()
 	{
-		$files = glob(base_path('database/{migrations,seeds}/*.php'), GLOB_BRACE);
+		$files = glob(base_path($this->filesPath.'/'.$this->signatureFiles), GLOB_BRACE);
 
 		$signature = '';
 		foreach ($files as $file) {
