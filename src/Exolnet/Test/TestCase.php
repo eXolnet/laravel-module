@@ -140,4 +140,20 @@ abstract class TestCase extends \Illuminate\Foundation\Testing\TestCase {
 	protected function tearDownModels()
 	{
 	}
+
+	/**
+	 * @param mixed|$abstract
+	 * @param object|null $mockInstance
+	 * @return \Mockery\MockInterface
+	 */
+	protected function mockAppInstance($abstract, $mockInstance = null)
+	{
+		if ( ! $mockInstance) {
+			$mockInstance = m::mock($abstract);
+		}
+
+		\App::instance($abstract, $mockInstance);
+
+		return $mockInstance;
+	}
 }
