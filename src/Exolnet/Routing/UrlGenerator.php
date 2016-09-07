@@ -109,9 +109,11 @@ class UrlGenerator extends LaravelUrlGenerator
 
 	/**
 	 * @param array $alternateParameters
+	 * @param bool  $absolute
+	 * @param bool  $addParameters
 	 * @return array
 	 */
-	public function alternates(array $alternateParameters = array(), $absolute = true)
+	public function alternates(array $alternateParameters = array(), $absolute = true, $addParameters = false)
 	{
 		$currentRoute = $this->request->route();
 
@@ -136,7 +138,9 @@ class UrlGenerator extends LaravelUrlGenerator
 				? $alternateParameters[$locale] + $currentParameters
 				: $currentParameters;
 
-			$parameters = array_intersect_key($parameters, $currentParameters);
+			if ( ! $addParameters) {
+				$parameters = array_intersect_key($parameters, $currentParameters);
+			}
 
 			$alternates[$locale] = $this->toRoute($route, $parameters, $absolute);
 		}
