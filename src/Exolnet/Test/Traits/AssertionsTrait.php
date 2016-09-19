@@ -2,6 +2,7 @@
 
 use Closure;
 use Illuminate\Http\Request;
+use InvalidArgumentException;
 use Symfony\Component\HttpKernel\Exception\HttpException;
 use View;
 
