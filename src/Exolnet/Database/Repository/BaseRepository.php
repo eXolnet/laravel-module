@@ -106,7 +106,7 @@ abstract class BaseRepository implements Repository {
 	 * @return mixed
 	 * @throws \Exolnet\Core\Exceptions\RepositoryException
 	 */
-	function __call($method, $args)
+	public function __call($method, $args)
 	{
 		$model = $this->getModel();
 

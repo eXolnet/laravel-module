@@ -41,7 +41,7 @@ class QueryEngine extends \Chumper\Datatable\Engines\BaseEngine
 		'counter'         => 0,
 	];
 
-	function __construct($builder)
+	public function __construct($builder)
 	{
 		parent::__construct();
 		if ($builder instanceof Relation) {
@@ -183,10 +183,10 @@ class QueryEngine extends \Chumper\Datatable\Engines\BaseEngine
 		$this->resultCollection = $this->resultCollection->map(function ($row) use ($columns, $self) {
 			$entry = [];
 			// add class and id if needed
-			if ( ! is_null($self->getRowClass()) && is_callable($self->getRowClass())) {
+			if ( ! $self->getRowClass() === null && is_callable($self->getRowClass())) {
 				$entry['DT_RowClass'] = call_user_func($self->getRowClass(), $row);
 			}
-			if ( ! is_null($self->getRowId()) && is_callable($self->getRowId())) {
+			if ( ! $self->getRowId() === null && is_callable($self->getRowId())) {
 				$entry['DT_RowId'] = call_user_func($self->getRowId(), $row);
 			}
 			$i = 0;
@@ -206,7 +206,7 @@ class QueryEngine extends \Chumper\Datatable\Engines\BaseEngine
 	private function doInternalOrder($builder, $columns)
 	{
 		//var_dump($this->orderColumn);
-		if ( ! is_null($this->orderColumn)) {
+		if ( ! $this->orderColumn === null) {
 			$i = 0;
 			foreach ($columns as $col) {
 

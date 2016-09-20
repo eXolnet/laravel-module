@@ -97,7 +97,7 @@ class Router extends LaravelRouter {
 		}
 
 		foreach ($locales as $locale) {
-			array_push($this->localeStack, $locale);
+			$this->localeStack[] = $locale;
 
 			$callback($locale);
 
@@ -182,7 +182,7 @@ class Router extends LaravelRouter {
 	public function bindQuery($key, Closure $query, Closure $callback = null)
 	{
 		$this->bind($key, function ($value) use ($query, $callback) {
-			if (is_null($value)) {
+			if ($value === null) {
 				return;
 			}
 

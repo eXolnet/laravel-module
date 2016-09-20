@@ -30,7 +30,7 @@ class UrlGenerator extends LaravelUrlGenerator
 	{
 		$uri = $this->current();
 
-		if ($this->request->getQueryString() && $append) {
+		if ($append && $this->request->getQueryString()) {
 			$parameters = array_merge($this->request->query(), $parameters);
 		}
 

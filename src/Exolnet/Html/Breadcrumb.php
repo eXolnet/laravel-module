@@ -38,11 +38,11 @@ class Breadcrumb implements Countable
 	 */
 	public function push($label, $url = null, array $attributes = [])
 	{
-		array_push($this->items, [
+		$this->items[] = [
 			'label'      => $label,
 			'url'        => $url,
 			'attributes' => $attributes,
-		]);
+		];
 
 		return $this;
 	}

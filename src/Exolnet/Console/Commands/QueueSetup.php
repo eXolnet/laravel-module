@@ -192,7 +192,7 @@ EOC;
 		$process->run();
 
 		if ( ! $process->isSuccessful()) {
-			$this->line('<bg=yellow>You need to run the command "supervisorctl update" to reload supervisor\'s configuration.</>');
+			$this->line('<bg=yellow>You need to run the command "supervisorctl update" to reload supervisor\'s configuration.</bg>');
 		}
 	}
 

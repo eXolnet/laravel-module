@@ -15,6 +15,7 @@ trait ValidationTrait
 	/**
 	 * Get the validation rules.
 	 *
+	 * @param string|array|null $attributes
 	 * @return array
 	 */
 	public function getRules($attributes = null)
@@ -75,6 +76,7 @@ trait ValidationTrait
 	/**
 	 * Validate the object with the rules.
 	 *
+	 * @param string|array|null $attributes
 	 * @return boolean
 	 */
 	public function validate($attributes = null)
@@ -90,8 +92,9 @@ trait ValidationTrait
 	/**
 	 * Validate the model and throw an Exception if it's invalid.
 	 *
-	 * @throws \Exolnet\Database\Eloquent\ModelValidationException
+	 * @param string|array|null $attributes
 	 * @return void
+	 * @throws \Exolnet\Database\Eloquent\ModelValidationException
 	 */
 	public function shouldBeValid($attributes = null)
 	{

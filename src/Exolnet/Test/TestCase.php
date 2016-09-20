@@ -121,7 +121,7 @@ abstract class TestCase extends \Illuminate\Foundation\Testing\TestCase {
 	{
 		// TODO: Remove this when Laravel fixes the issue with model booting in tests
 		if (self::$forceBoot) {
-			$this->setupModels();
+			$this->setUpModels();
 		} else {
 			self::$forceBoot = true;
 		}

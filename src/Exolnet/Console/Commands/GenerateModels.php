@@ -86,7 +86,7 @@ class GenerateModels extends Command {
 					->contains('protected $table = \'' . $tableName . '\'');
 
 				if ( ! count($finder)) {
-					array_push($tablesList, $tableName);
+					$tablesList[] = $tableName;
 				}
 			}
 		}
