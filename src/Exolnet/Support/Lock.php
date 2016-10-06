@@ -62,7 +62,6 @@ class Lock
 			return true;
 		}
 
-		unlink($this->filename);
 		$this->isLocked = ! flock($this->handle, LOCK_UN);
 		fclose($this->handle);
 
