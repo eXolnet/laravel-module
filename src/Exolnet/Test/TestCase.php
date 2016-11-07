@@ -48,8 +48,23 @@ abstract class TestCase extends \Illuminate\Foundation\Testing\TestCase {
 	 */
 	public function createApplication()
 	{
-		// in src/Exolnet/src/Exolnet or vendor/exolnet/src/Exolnet
-		$app = require __DIR__ . '/../../../../../bootstrap/app.php';
+		// in src/Exolnet/src/Exolnet/Test or vendor/exolnet/laravel-module/src/Exolnet/Test
+		$testedPaths = [
+			__DIR__ . '/../../../../../bootstrap/app.php',
+			__DIR__ . '/../../../../../../bootstrap/app.php',
+		];
+
+		$app = null;
+		foreach ($testedPaths as $testedPath) {
+			if (file_exists($testedPath)) {
+				$app = require $testedPath;
+				break;
+			}
+		}
+
+		if ( ! $app) {
+			throw new \RuntimeException('Could not find bootstrap/app.php');
+		}
 
 		$app->loadEnvironmentFrom('.env.testing');
 
