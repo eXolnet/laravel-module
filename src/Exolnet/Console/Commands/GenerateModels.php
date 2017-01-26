@@ -1,6 +1,7 @@
 <?php namespace Exolnet\Console\Commands;
 
 use Illuminate\Console\Command;
+use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\DB;
@@ -14,7 +15,7 @@ class GenerateModels extends Command {
 	 *
 	 * @var string
 	 */
-	protected $signature = 'generate:models {--fillModels : Fill models with getters and setters}';
+	protected $signature = 'generate:models {--fillModels : Fill models with getters and setters} {--disable-timestamps} {--namespace=}';
 
 	/**
 	 * The console command description.
@@ -32,6 +33,13 @@ class GenerateModels extends Command {
 	 * @var string
 	 */
 	protected $namespaces;
+
+	/**
+	 * @var array
+	 */
+	protected $nonFillableColumns = [
+		'is_active', 'created_at', 'updated_at', 'deleted_at', 'created_on', 'updated_on', 'deleted_on',
+	];
 
 	/**
 	 * GenerateModels constructor.
@@ -134,7 +142,7 @@ class GenerateModels extends Command {
 			$modelName = studly_case($tableName);
 			$namespaces = array_keys($this->namespaces);
 
-			$namespace = $this->anticipate('Which namespace do you want to use for ' . $modelName . '? [' . implode(', ', $namespaces) . ']', $namespaces);
+			$namespace = $this->option('namespace') ?: $this->anticipate('Which namespace do you want to use for ' . $modelName . '? [' . implode(', ', $namespaces) . ']', $namespaces);
 			$columns = Schema::getColumnListing($tableName);
 
 			if ( ! array_key_exists($namespace, $this->namespaces)) {
@@ -160,18 +168,21 @@ class GenerateModels extends Command {
 	{
 		$directory = $this->namespaces[$namespace];
 
-		$data = [
-			'NAMESPACE'        => $namespace,
-			'NAME'             => $modelName,
-			'TABLE_NAME'       => $tableName,
-			'FILLABLE_COLUMNS' => $this->formatArray(array_diff($columns, ['id', 'created_at', 'created_at', 'updated_at', 'deleted_at'])),
-		];
+		$primaryKey = ! in_array('id', $columns) ? $columns[0] : 'id';
 
-		$template = file_get_contents(__DIR__ .'/templates/model.template');
+		$nonFillableColumns = $this->nonFillableColumns;
+		$nonFillableColumns[] = $primaryKey;
 
-		foreach ($data as $key => $value) {
-			$template = preg_replace("/\\$$key\\$/i", $value, $template);
-		}
+		$fillableColumns = array_diff($columns, $nonFillableColumns);
+
+		$template = \View::file(__DIR__ .'/templates/model.blade.php', [
+			'primaryKey'        => $primaryKey,
+			'namespace'         => $namespace,
+			'name'              => $modelName,
+			'tableName'         => $tableName,
+			'disableTimestamps' => $this->option('disable-timestamps'),
+			'fillableColumns'   => $this->formatArray($fillableColumns),
+		]);
 
 		$path = base_path($directory);
 		$fileName = $modelName . '.php';
@@ -220,6 +231,10 @@ class GenerateModels extends Command {
 
 		/** @var string $directory */
 		foreach ($this->getModuleDirectories() as $directory) {
+			if ( ! $this->files->exists($directory)) {
+				continue;
+			}
+
 			$finder->in($directory);
 		}
 
