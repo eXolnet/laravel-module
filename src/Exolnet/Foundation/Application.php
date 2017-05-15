@@ -3,6 +3,7 @@
 use Exolnet\Routing\RoutingServiceProvider;
 use Illuminate\Foundation\Application as LaravelApplication;
 use Illuminate\Events\EventServiceProvider;
+use Illuminate\Log\LogServiceProvider;
 
 class Application extends LaravelApplication
 {
@@ -64,6 +65,8 @@ class Application extends LaravelApplication
 	protected function registerBaseServiceProviders()
 	{
 		$this->register(new EventServiceProvider($this));
+
+		$this->register(new LogServiceProvider($this));
 
 		$this->register(new RoutingServiceProvider($this));
 	}
