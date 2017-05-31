@@ -55,17 +55,17 @@ class CrudController extends Controller
 	 * @var array
 	 */
 	private $baseLabels = [
-		'name' => 'Items',
-		'singular_name' => 'Item',
-		'all_items' => 'All :name',
-		'edit_item' => 'Edit :singular_name',
-		'view_item' => 'View :singular_name',
-		'update_item' => 'Update :singular_name',
-		'add_item' => 'Add :singular_name',
-		'new_item' => 'New :singular_name',
-		'search_items' => 'Search :name',
-		'filter_items' => 'Filter :name',
-		'not_found' => 'No :singular_name_lower to display.',
+		'name'           => 'Items',
+		'singular_name'  => 'Item',
+		'all_items'      => 'All :name',
+		'edit_item'      => 'Edit :singular_name',
+		'view_item'      => 'View :singular_name',
+		'update_item'    => 'Update :singular_name',
+		'add_item'       => 'Add :singular_name',
+		'new_item'       => 'New :singular_name',
+		'search_items'   => 'Search :name',
+		'filter_items'   => 'Filter :name',
+		'not_found'      => 'No :singular_name_lower to display.',
 		'notice_created' => 'The :singular_name_lower was successfully created.',
 		'notice_updated' => 'The :singular_name_lower was successfully updated.',
 		'notice_deleted' => 'The :singular_name_lower was successfully deleted.',
@@ -191,10 +191,10 @@ class CrudController extends Controller
 	 */
 	public function indexHandleDataTable(Request $request)
 	{
-		$users = $this->getBaseDataTableData($request);
+		$items = $this->getBaseDataTableData($request);
 
 		/** @var \Yajra\Datatables\Engines\BaseEngine $dataTable */
-		$dataTable = Datatables::of($users);
+		$dataTable = Datatables::of($items);
 
 		$dataTable->addColumn('actions', function(Model $item) {
 			return $this->getActions($item);
