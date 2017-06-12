@@ -139,7 +139,7 @@ class Route extends LaravelRoute
 			return false;
 		}
 
-		if ($this->getUri() === $route->getUri()) {
+		if ($this->uri() === $route->uri()) {
 			return false;
 		}
 
