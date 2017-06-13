@@ -36,7 +36,11 @@ class UrlGenerator extends LaravelUrlGenerator
 
 		$parameters = array_filter($parameters);
 
-		return $this->to($uri, $parameters);
+		if (count($parameters) > 0) {
+			$uri .= '?'. http_build_query($parameters);
+		}
+
+		return $uri;
 	}
 
 	/**
