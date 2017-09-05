@@ -1,5 +1,6 @@
 <?php namespace Exolnet\Test\Traits;
 
+use App\Providers\RouteServiceProvider;
 use Closure;
 use Illuminate\Http\Request;
 use InvalidArgumentException;
@@ -83,9 +84,16 @@ trait AssertionsTrait {
 			return;
 		}
 
+		$routeServiceProvider = $this->app->getProvider(RouteServiceProvider::class);
+
+		$namespace = '';
+		if (method_exists($routeServiceProvider, 'getNamespace')) {
+			$namespace = $routeServiceProvider->getNamespace() . '\\';
+		}
+
 		$controller = $route->getAction()['controller'];
 		$routeAction = starts_with($controller, '\\') ? $controller : '\\' . $controller;
-		$action = starts_with($action, '\\') ? $action : '\\' . $action;
+		$action = starts_with($action, '\\') ? $action : '\\' . $namespace . $action;
 		$this->assertSame($routeAction, $action, $message);
 	}
 
