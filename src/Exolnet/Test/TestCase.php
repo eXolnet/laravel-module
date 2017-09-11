@@ -6,7 +6,7 @@ use Exolnet\Test\Traits\AssertionsTrait;
 use Faker\Factory as FakerFactory;
 use Mockery as m;
 
-abstract class TestCase extends \Laravel\BrowserKitTesting\TestCase {
+abstract class TestCase extends \Illuminate\Foundation\Testing\TestCase {
 	use AssertionsTrait;
 
 	/**
