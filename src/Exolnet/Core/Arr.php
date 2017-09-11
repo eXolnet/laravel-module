@@ -1,6 +1,7 @@
 <?php namespace Exolnet\Core;
 
 use Illuminate\Support\Arr as LaravelArr;
+use Illuminate\Support\Collection;
 
 class Arr extends LaravelArr
 {
@@ -127,5 +128,31 @@ class Arr extends LaravelArr
 				self::set($item, $key, $value);
 			}
 		}
+	}
+
+	/**
+	 * Flatten a multi-dimensional array into a single level, using keys.
+	 *
+	 * @param array $array
+	 * @param int   $depth
+	 * @return array
+	 */
+	public static function flattenKeys($array, $depth = INF)
+	{
+		$result = [];
+
+		foreach ($array as $key => $item) {
+			$item = $item instanceof Collection ? $item->all() : $item;
+
+			if ( ! is_array($item)) {
+				$result = array_merge($result, [$key]);
+			} elseif ($depth === 1) {
+				$result = array_merge($result, array_keys($item));
+			} else {
+				$result = array_merge($result, static::flattenKeys($item, $depth - 1));
+			}
+		}
+
+		return $result;
 	}
 }

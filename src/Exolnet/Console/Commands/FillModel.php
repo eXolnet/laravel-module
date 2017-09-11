@@ -1,6 +1,8 @@
 <?php namespace Exolnet\Console\Commands;
 
 use App;
+use Doctrine\DBAL\DBALException;
+use Doctrine\DBAL\Types\Type;
 use Illuminate\Console\Command;
 use Illuminate\Filesystem\Filesystem;
 use Illuminate\Support\Str;
@@ -94,12 +96,17 @@ class FillModel extends Command {
 		preg_match_all('/use (.+?);/', $content, $usesMatched);
 		$uses = $usesMatched[1];
 
-		$columns = Schema::getColumnListing($table);
-		$changeCode = [];
-		$changeUses = [];
+		$columns     = Schema::getColumnListing($table);
+		$changeCode  = [];
+		$changeUses  = [];
+		$changeHints = [];
 
 		foreach ($columns as $column) {
 			$this->info('    - ' . $column);
+
+			if ($nativeType = $this->getColumnNativeType($table, $column)) {
+				$changeHints[] = ' * @property ' . $nativeType . ' $' . $column;
+			}
 
 			if ($column === $keyName) {
 				// Primary key
@@ -130,7 +137,7 @@ class FillModel extends Command {
 				$this->comment('        - Date');
 
 				$changeUses[] = '\\DateTime';
-				$changeCode += $this->makeGetterSetter($column, 'get', 'DateTime');
+				$changeCode += $this->makeGetterSetter($column, 'get', '\\DateTime');
 			} else {
 				// Normal Getter/Setter
 				$this->comment('        - Normal');
@@ -159,6 +166,15 @@ class FillModel extends Command {
 			return 'use \\' . ltrim($use, '\\') . ';';
 		}, $uses));
 		$content = str_replace('/* PHP-USES */', $uses, $content);
+
+		// Append class hints
+		if ( ! empty($changeHints)) {
+			$hints = '/**' . PHP_EOL .
+				implode(PHP_EOL, $changeHints) . PHP_EOL .
+				' */';
+
+			$content = preg_replace('/^class /m', $hints . PHP_EOL . '$0', $content);
+		}
 
 		// Append functions
 		foreach ($changeCode as $functionName => $code) {
@@ -334,9 +350,49 @@ class FillModel extends Command {
 
 		/** @var string $directory */
 		foreach ($this->getModuleDirectories() as $directory) {
+			if ( ! $this->files->exists($directory)) {
+				continue;
+			}
+
 			$finder->in($directory);
 		}
 
 		return $finder;
+	}
+
+	/**
+	 * @param string $table
+	 * @param string $column
+	 * @return string|null
+	 */
+	private function getColumnNativeType($table, $column)
+	{
+		try {
+			$schemaType = Schema::getColumnType($table, $column);
+
+			if (in_array($schemaType, [Type::TARRAY, Type::SIMPLE_ARRAY, Type::JSON_ARRAY, Type::OBJECT])) {
+				return 'array';
+			}
+
+			if (in_array($schemaType, [Type::BIGINT, Type::INTEGER, Type::SMALLINT])) {
+				return 'int';
+			}
+
+			if (in_array($schemaType, [Type::DECIMAL, Type::FLOAT])) {
+				return 'float';
+			}
+
+			if (in_array($schemaType, [Type::DATETIME, Type::DATETIMETZ, Type::DATE, Type::TIME, Type::STRING, Type::TEXT, Type::BINARY, Type::BLOB, Type::GUID])) {
+				return 'string';
+			}
+
+			if (in_array($schemaType, [Type::BOOLEAN])) {
+				return 'bool';
+			}
+
+			return 'mixed';
+		} catch (DBALException $e) {
+			return null;
+		}
 	}
 }
