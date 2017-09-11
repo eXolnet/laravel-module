@@ -4,20 +4,36 @@ use BadMethodCallException;
 use Illuminate\View\View;
 use PHPUnit_Framework_Assert as PHPUnit;
 
+/**
+ * @method \Illuminate\Http\Response get($method, $uri, $parameters = [], $cookies = [], $files = [], $server = [], $content = null)
+ * @method \Illuminate\Http\Response getAjax($method, $uri, $parameters = [], $cookies = [], $files = [], $server = [], $content = null)
+ * @method \Illuminate\Http\Response postAjax($method, $uri, $parameters = [], $cookies = [], $files = [], $server = [], $content = null)
+ * @method \Illuminate\Http\Response postAjax($method, $uri, $parameters = [], $cookies = [], $files = [], $server = [], $content = null)
+ * @method \Illuminate\Http\Response putAjax($method, $uri, $parameters = [], $cookies = [], $files = [], $server = [], $content = null)
+ * @method \Illuminate\Http\Response putAjax($method, $uri, $parameters = [], $cookies = [], $files = [], $server = [], $content = null)
+ * @method \Illuminate\Http\Response patchAjax($method, $uri, $parameters = [], $cookies = [], $files = [], $server = [], $content = null)
+ * @method \Illuminate\Http\Response patchAjax($method, $uri, $parameters = [], $cookies = [], $files = [], $server = [], $content = null)
+ * @method \Illuminate\Http\Response deleteAjax($method, $uri, $parameters = [], $cookies = [], $files = [], $server = [], $content = null)
+ * @method \Illuminate\Http\Response deleteAjax($method, $uri, $parameters = [], $cookies = [], $files = [], $server = [], $content = null)
+ */
 abstract class TestCaseFunctional extends \Tests\TestCase {
 	public function __call($method, $args)
 	{
 		// Setup AJAX query
+		$isAjaxQuery = false;
 		if (ends_with($method, 'Ajax')) {
-			$this->client->setServerParameter('HTTP_X-Requested-With', 'XMLHttpRequest');
-			$this->client->setServerParameter('HTTP_CONTENT_TYPE', 'application/json');
-			$this->client->setServerParameter('HTTP_ACCEPT', 'application/json');
 			$method = substr($method, 0, -strlen('Ajax'));
+			$isAjaxQuery = true;
 		}
 
 		if (in_array($method, ['get', 'post', 'put', 'patch', 'delete'])) {
 			array_unshift($args, $method);
-			return call_user_func_array([$this, 'call'], $args);
+			if ($isAjaxQuery) {
+				call_user_func_array([$this, 'json'], $args);
+			} else {
+				call_user_func_array([$this, 'call'], $args);
+			}
+			return $this->response;
 		}
 
 		throw new BadMethodCallException;
