@@ -46,7 +46,7 @@ trait AssertionsTrait {
 
 	public function assertResponseContentType($expected)
 	{
-		$response = $this->client->getResponse();
+		$response = $this->response;
 
 		$actual = $response->headers->get('Content-type');
 
