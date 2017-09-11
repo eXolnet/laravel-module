@@ -3,7 +3,7 @@
 use Exception;
 use Illuminate\Contracts\Support\Arrayable;
 use Illuminate\Contracts\Support\Jsonable;
-use Illuminate\Contracts\Validation\ValidationException as LaravelValidationException;
+use Illuminate\Validation\ValidationException as LaravelValidationException;
 use Illuminate\Http\Exception\HttpResponseException;
 use Illuminate\Http\Request;
 use Illuminate\Support\MessageBag;
@@ -21,7 +21,7 @@ class ValidationException extends LaravelValidationException implements Arrayabl
 	/**
 	 * @var \Illuminate\Validation\Validator
 	 */
-	protected $validator;
+	public $validator;
 
 	/**
 	 * Constructor
