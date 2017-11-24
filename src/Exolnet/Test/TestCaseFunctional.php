@@ -3,20 +3,16 @@
 use BadMethodCallException;
 use Illuminate\View\View;
 use PHPUnit_Framework_Assert as PHPUnit;
+use Tests\TestCase as BaseTestCase;
 
 /**
- * @method \Illuminate\Http\Response get($method, $uri, $parameters = [], $cookies = [], $files = [], $server = [], $content = null)
  * @method \Illuminate\Http\Response getAjax($method, $uri, $parameters = [], $cookies = [], $files = [], $server = [], $content = null)
  * @method \Illuminate\Http\Response postAjax($method, $uri, $parameters = [], $cookies = [], $files = [], $server = [], $content = null)
- * @method \Illuminate\Http\Response postAjax($method, $uri, $parameters = [], $cookies = [], $files = [], $server = [], $content = null)
- * @method \Illuminate\Http\Response putAjax($method, $uri, $parameters = [], $cookies = [], $files = [], $server = [], $content = null)
  * @method \Illuminate\Http\Response putAjax($method, $uri, $parameters = [], $cookies = [], $files = [], $server = [], $content = null)
  * @method \Illuminate\Http\Response patchAjax($method, $uri, $parameters = [], $cookies = [], $files = [], $server = [], $content = null)
- * @method \Illuminate\Http\Response patchAjax($method, $uri, $parameters = [], $cookies = [], $files = [], $server = [], $content = null)
- * @method \Illuminate\Http\Response deleteAjax($method, $uri, $parameters = [], $cookies = [], $files = [], $server = [], $content = null)
  * @method \Illuminate\Http\Response deleteAjax($method, $uri, $parameters = [], $cookies = [], $files = [], $server = [], $content = null)
  */
-abstract class TestCaseFunctional extends \Tests\TestCase {
+abstract class TestCaseFunctional extends BaseTestCase {
 	public function __call($method, $args)
 	{
 		// Setup AJAX query

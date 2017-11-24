@@ -4,9 +4,10 @@ use DB;
 use Exception;
 use Exolnet\Test\Traits\AssertionsTrait;
 use Faker\Factory as FakerFactory;
+use Illuminate\Foundation\Testing\TestCase as BaseTestCase;
 use Mockery as m;
 
-abstract class TestCase extends \Illuminate\Foundation\Testing\TestCase {
+abstract class TestCase extends BaseTestCase {
 	use AssertionsTrait;
 
 	/**
