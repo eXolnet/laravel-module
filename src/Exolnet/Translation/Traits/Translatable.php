@@ -208,7 +208,7 @@ trait Translatable {
         foreach ($attributes as $attribute){
             foreach ($this->translations as $translation) {
                 $locale = $translation->locale;
-                $attributesTranslation[$attribute][$locale] = $translation->{$attribute};
+                $attributesTranslation[$attribute.':'.$locale] = $translation->{$attribute};
             }
         }
 
