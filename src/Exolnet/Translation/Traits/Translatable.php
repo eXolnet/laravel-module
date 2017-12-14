@@ -196,6 +196,25 @@ trait Translatable {
 		return $this;
 	}
 
+    /**
+     * return array
+     */
+    public function attributesTranslationToArray()
+    {
+        $attributesTranslation = [];
+        $attributes = $this->translatedAttributes;
+
+
+        foreach ($attributes as $attribute){
+            foreach ($this->translations as $translation) {
+                $locale = $translation->locale;
+                $attributesTranslation[$attribute][$locale] = $translation->{$attribute};
+            }
+        }
+
+        return $attributesTranslation;
+    }
+
 	/**
 	 * @return array
 	 */
