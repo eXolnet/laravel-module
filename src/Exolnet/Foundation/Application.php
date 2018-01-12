@@ -13,20 +13,29 @@ class Application extends LaravelApplication
 	public function reset()
 	{
 		// Container reset
+		static::$instance = null;
+
 		$this->resolved = [];
 		$this->bindings = [];
+		$this->methodBindings = [];
 		$this->instances = [];
 		$this->aliases = [];
+		$this->abstractAliases = [];
+		$this->extenders = [];
+		$this->tags = [];
+		$this->buildStack = [];
+		$this->with = [];
+		$this->contextual = [];
 		$this->reboundCallbacks = [];
-		$this->resolvingCallbacks = [];
 		$this->globalResolvingCallbacks = [];
+		$this->globalAfterResolvingCallbacks = [];
+		$this->resolvingCallbacks = [];
+		$this->afterResolvingCallbacks = [];
 
 		// Application reset
 		$this->bootingCallbacks = [];
 		$this->bootedCallbacks = [];
-		$this->finishCallbacks = [];
-		$this->shutdownCallbacks = [];
-		$this->middlewares = [];
+		$this->terminatingCallbacks = [];
 		$this->serviceProviders = [];
 		$this->loadedProviders = [];
 		$this->deferredServices = [];
