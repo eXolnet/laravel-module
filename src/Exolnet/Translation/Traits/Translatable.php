@@ -217,24 +217,24 @@ trait Translatable {
 		return $attributes;
 	}
 
-    /**
-     * return array
-     */
-    public function attributesTranslationToArray()
-    {
-        $attributesTranslation = [];
-        $attributes = $this->translatedAttributes;
+	/**
+	 * return array
+	 */
+	public function attributesTranslationToArray()
+	{
+		$attributesTranslation = [];
+		$attributes = $this->translatedAttributes;
 
 
-        foreach ($attributes as $attribute){
-            foreach ($this->translations as $translation) {
-                $locale = $translation->locale;
-                $attributesTranslation[$attribute][$locale] = $translation->{$attribute};
-            }
-        }
+		foreach ($attributes as $attribute){
+			foreach ($this->translations as $translation) {
+				$locale = $translation->locale;
+				$attributesTranslation[$attribute][$locale] = $translation->{$attribute};
+			}
+		}
 
-        return $attributesTranslation;
-    }
+		return $attributesTranslation;
+	}
 
 	/**
 	 * @return array
