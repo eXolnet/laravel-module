@@ -196,6 +196,27 @@ trait Translatable {
 		return $this;
 	}
 
+	/**
+	 * @return array
+	 */
+	public function translationAttributesToArray()
+	{
+		$attributes = [];
+		$hiddenAttributes = $this->getHidden();
+
+		foreach ($this->translatedAttributes as $field) {
+			if (in_array($field, $hiddenAttributes)) {
+				continue;
+			}
+
+			if ($translations = $this->getTranslation()) {
+				$attributes[$field] = $translations->$field;
+			}
+		}
+
+		return $attributes;
+	}
+
     /**
      * return array
      */
