@@ -24,4 +24,14 @@ class SecureString
     {
         return $this->value;
     }
+
+    /**
+     * @return array
+     */
+    public function __debugInfo()
+    {
+        return [
+            'value' => str_repeat('*', strlen($this->value)),
+        ];
+    }
 }
