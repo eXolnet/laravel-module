@@ -49,7 +49,10 @@
 	"autoload": {
 		"psr-4": {
 			"Exolnet\\": "src/Exolnet/"
-		}
+		},
+		"files": [
+			"src/helpers.php"
+		]
 	},
 	"extra": {
 		"branch-alias": {
