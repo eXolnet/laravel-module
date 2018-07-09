@@ -10,16 +10,16 @@ use Schema;
 use Symfony\Component\Finder\Finder;
 use Symfony\Component\Finder\SplFileInfo;
 
-class FillModel extends Command {
+class MakeModelsAccessors extends Command {
 	/**
 	 * @var string
 	 */
-	protected $name = 'fill:models';
+	protected $name = 'make:models:accessors';
 
 	/**
 	 * @var string
 	 */
-	protected $description = "Parse table to fill a model with it's relations, getters and setters.";
+	protected $description = 'Create models relations, getters and setters from database schema';
 
 	/**
 	 * @var \Illuminate\Filesystem\Filesystem

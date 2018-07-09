@@ -9,20 +9,20 @@ use Illuminate\Filesystem\Filesystem;
 use Illuminate\Support\Facades\Schema;
 use Symfony\Component\Finder\Finder;
 
-class GenerateModels extends Command {
+class MakeModels extends Command {
 	/**
 	 * The name and signature of the console command.
 	 *
 	 * @var string
 	 */
-	protected $signature = 'generate:models {--fillModels : Fill models with getters and setters} {--disable-timestamps} {--namespace=}';
+	protected $signature = 'make:models {--fillModels : Fill models with getters and setters} {--disable-timestamps} {--namespace=}';
 
 	/**
 	 * The console command description.
 	 *
 	 * @var string
 	 */
-	protected $description = 'Generate models from schema';
+	protected $description = 'Create models from database schema';
 
 	/**
 	 * @var \Illuminate\Filesystem\Filesystem
@@ -73,7 +73,7 @@ class GenerateModels extends Command {
 		$this->createModelsFromATablesList($tablesList);
 
 		if ($this->option('fillModels')) {
-			$this->call('fill:models');
+			$this->call('make:models:accessors');
 		}
 	}
 
