@@ -2,6 +2,7 @@
 
 use Config;
 use Illuminate\Http\Request;
+use RuntimeException;
 
 class LocaleService
 {
@@ -18,7 +19,13 @@ class LocaleService
 	 */
 	public function getSupportedLocales()
 	{
-		return Config::get('app.supported_locales', []);
+        $supportedLocales = Config::get('app.supported_locales');
+
+        if ( ! $supportedLocales ) {
+            throw new RuntimeException('You need to define some supported locales (configuration variable "app.supported_locales").');
+        }
+
+        return $supportedLocales;
 	}
 
 	/**
