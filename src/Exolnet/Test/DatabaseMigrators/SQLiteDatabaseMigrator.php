@@ -2,6 +2,7 @@
 
 use Artisan;
 use Illuminate\Filesystem\Filesystem;
+use Illuminate\Support\Facades\DB as DB;
 
 class SQLiteDatabaseMigrator extends DatabaseMigrator
 {
@@ -36,11 +37,11 @@ class SQLiteDatabaseMigrator extends DatabaseMigrator
 	protected function configurePragma()
 	{
 		// Enable foreign keys for the current connection/file
-		\DB::statement('PRAGMA foreign_keys = ON;');
+		DB::statement('PRAGMA foreign_keys = ON;');
 		// Create sqlite-journal in memory only (instead of creating disk files)
-		\DB::statement('PRAGMA journal_mode = MEMORY;');
+		DB::statement('PRAGMA journal_mode = MEMORY;');
 		// Do not wait for OS after sending write commands
-		\DB::statement('PRAGMA synchronous = OFF;');
+		DB::statement('PRAGMA synchronous = OFF;');
 	}
 
 	protected function initialMigration()
