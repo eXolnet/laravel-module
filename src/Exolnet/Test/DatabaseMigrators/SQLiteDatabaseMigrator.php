@@ -2,7 +2,7 @@
 
 use Artisan;
 use Illuminate\Filesystem\Filesystem;
-use Illuminate\Support\Facades\DB as DB;
+use Illuminate\Support\Facades\DB;
 
 class SQLiteDatabaseMigrator extends DatabaseMigrator
 {
