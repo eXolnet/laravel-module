@@ -4,6 +4,7 @@ use Closure;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\Relation;
+use Illuminate\Support\Facades\DB;
 
 class Helper
 {
@@ -14,7 +15,7 @@ class Helper
 	 */
 	public static function syncHasMany(HasMany $relation, array $items, Closure $onSave = null)
 	{
-		\DB::transaction(function () use ($relation, $items, $onSave) {
+		DB::transaction(function () use ($relation, $items, $onSave) {
 			self::syncHasManyInternal($relation, $items, $onSave);
 		});
 	}

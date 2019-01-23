@@ -1,7 +1,7 @@
 <?php namespace Exolnet\Database;
 
-use DB;
 use Illuminate\Database\Query\Builder;
+use Illuminate\Support\Facades\DB;
 
 class QueryHelper
 {

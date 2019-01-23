@@ -1,5 +1,7 @@
 <?php namespace Exolnet\Database\Eloquent;
 
+use Illuminate\Support\Facades\DB;
+
 trait OrderableTrait
 {
 	/**
@@ -196,7 +198,7 @@ trait OrderableTrait
 			return;
 		}
 
-		\DB::transaction(function () use ($newOrder) {
+		DB::transaction(function () use ($newOrder) {
 			$this->setOrder($newOrder)->save();
 		});
 
@@ -215,7 +217,7 @@ trait OrderableTrait
 			return;
 		}
 
-		$query = \DB::table($this->getTable());
+		$query = DB::table($this->getTable());
 
 		$this->applyUniqueColumn($query);
 

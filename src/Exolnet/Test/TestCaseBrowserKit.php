@@ -1,9 +1,9 @@
 <?php namespace Exolnet\Test;
 
-use DB;
 use Exception;
 use Exolnet\Test\Traits\AssertionsTrait;
 use Faker\Factory as FakerFactory;
+use Illuminate\Support\Facades\DB;
 use Mockery as m;
 
 abstract class TestCaseBrowserKit extends \Laravel\BrowserKitTesting\TestCase {

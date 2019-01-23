@@ -2,9 +2,9 @@
 
 namespace Exolnet\Database\Migrations;
 
-use DB;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\SQLiteConnection;
+use Illuminate\Support\Facades\DB;
 use Schema;
 
 trait MigrationExtension
